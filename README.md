@@ -25,6 +25,7 @@ makeFetchAction = (
 Where
 
 `ReduxStandardAPICallingAction` is heavily influenced by [`redux-api-middleware`](https://github.com/agraboso/redux-api-middleware#redux-standard-api-calling-actions)
+
 `FluxStandardAction` can be found [here](https://github.com/acdlite/flux-standard-action)
 
 ```js
