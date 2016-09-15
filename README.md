@@ -1,4 +1,4 @@
-# make-fetch-action
+# redux-api-call
 Redux utilities for API calls using fetch
 
 # The goals
@@ -128,6 +128,3 @@ class TodosComponent extends React.Component {
   }
 }
 ```
-
-
-
