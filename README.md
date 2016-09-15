@@ -91,7 +91,7 @@ const {
   endpoint: '/api/v1/todos'
 }, {
   completeTodos: data => data.todos.filter(todo => todo.complete),
-  incompleTodos: data => data.todos.filter(todo => !todo.complete),
+  incompleteTodos: data => data.todos.filter(todo => !todo.complete),
 })
 
 export { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosSelector, errorSelector }
