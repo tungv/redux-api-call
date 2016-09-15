@@ -29,7 +29,7 @@ Where
 
 ```js
 type SelectorDescriptor = {
-  [selectorName: string]: (apiResponseBody: any) => any
+  [selectorName: string]: (apiResponseBody: any, apiErrorResponse: any) => any
 }
 ```
 
@@ -41,7 +41,7 @@ const {
   dataSelector,
   errorSelector,
   latestTodoSelector,
-  incompletedTodosSelector,
+  incompleteTodosSelector,
 } = makeFetchAction(
   'SAMPLE_API',
   () => ({
@@ -54,7 +54,80 @@ const {
   // selectors
   {
     latestTodo: data => data.todos[0],
-    incompletedTodos: data => data.todos.filter(todo => !todo.completed),
+    incompleteTodos: data => data.todos.filter(todo => !todo.complete),
   }
 );
 ```
+
+# Usages
+First you need to add a reducer to your root reducer with a pathname is `api_responses` (In next releases, this name should be configurable, but for now, just use it)
+
+```js
+
+// rootReducer.js
+import { combineReducers } from 'redux'
+import { reducers as apiReducers } from 'redux-api-call'
+
+const rootReducer = combineReducers({
+  ...apiReducers
+})
+
+// configStore.js
+import { createStore, applyMiddleware } from 'redux'
+import { middleware as apiMiddleware } from 'redux-api-call'
+
+const store = createStore(rootReducer, {}, applyMiddleware(apiMiddleware));
+
+// state.js
+import { makeFetchAction } from 'redux-api-call'
+
+const {
+  actionCreator: fetchTodos,
+  isFetchingSelector,
+  errorSelector,
+  completeTodosSelector,
+  incompleteTodosSelector
+} = makeFetchAction('FETCH_TODOS', () => ({
+  endpoint: '/api/v1/todos'
+}, {
+  completeTodos: data => data.todos.filter(todo => todo.complete),
+  incompleTodos: data => data.todos.filter(todo => !todo.complete),
+})
+
+export { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosSelector, errorSelector }
+
+// component.jsx
+import react from 'react'
+import { connect } from 'react-redux'
+import { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosSelector, errorSelector } from './state'
+
+@connect(
+  state => ({
+    loading: isFetchingSelector(state),
+    error: errorSelector(state),
+    completeTodos: completeTodosSelector(state),
+    incompleteTodos: incompleteTodosSelector(state),
+  }), {
+    fetchTodos,
+  }
+)
+class TodosComponent extends React.Component {
+  componentDidMount() {
+    // first fetch
+    this.props.fetchTodos();
+  }
+  
+  render() {
+    const { loading, error, completeTodos, incompleteTodos } = this.props;
+    
+    return (
+      <div>
+        {/* ... your markup ...*/}
+      </div>
+    )
+  }
+}
+```
+
+
+
