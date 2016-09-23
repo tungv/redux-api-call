@@ -6,8 +6,13 @@ export default {
   entry: 'src/index.js',
   dest: '.build/index.js',
   format: 'cjs',
-  plugins: [buble(), strip({
-    debugger: true,
-    functions: [ 'console.*', 'assert.*', 'debug', 'alert' ],
-  })]
+  plugins: [
+    buble({
+      objectAssign: 'Object.assign'
+    }),
+    strip({
+      debugger: true,
+      functions: [ 'console.*', 'assert.*', 'debug', 'alert' ],
+    })
+  ]
 };
