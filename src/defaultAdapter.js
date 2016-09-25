@@ -1,3 +1,3 @@
-export default (api) => {
-  return Promise.resolve({ key: 'val' });
+export default ({ endpoint, others }) => {
+  return fetch(endpoint, others);
 };

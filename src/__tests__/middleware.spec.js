@@ -3,12 +3,15 @@ import configureStore from 'redux-mock-store';
 import { stub } from 'sinon';
 import timekeeper from 'timekeeper';
 import fakeResponse from './makeFakeJSONResponse';
+import { CALL_API } from '../constants.js';
+import { stub_validateApi, reset_validateApi } from '../validateApi.js';
 import {
-  CALL_API,
-  ACTION_FETCH_START,
-  ACTION_FETCH_COMPLETE,
-  ACTION_FETCH_FAILURE,
-} from '../constants.js';
+  stub_makeStartAction, reset_makeStartAction,
+  stub_makeStartErrorAction, reset_makeStartErrorAction,
+  stub_makeSuccessAction, reset_makeSuccessAction,
+  stub_makeFailureAction, reset_makeFailureAction,
+} from '../actions';
+
 import middleware from '../middleware';
 
 describe('middleware', () => {
@@ -19,6 +22,27 @@ describe('middleware', () => {
   describe('with store', () => {
     const mockAdapter = stub();
     const mockStore = configureStore([middleware(mockAdapter)]);
+    const mock_makeStartAction = stub();
+    const mock_makeStartErrorAction = stub();
+    const mock_makeSuccessAction = stub();
+    const mock_makeFailureAction = stub();
+    const mock_validateApi = stub();
+
+    before(() => {
+      stub_makeStartAction(mock_makeStartAction);
+      stub_makeStartErrorAction(mock_makeStartErrorAction);
+      stub_makeSuccessAction(mock_makeSuccessAction);
+      stub_makeFailureAction(mock_makeFailureAction);
+      stub_validateApi(mock_validateApi);
+    });
+
+    after(() => {
+      reset_makeStartAction();
+      reset_makeStartErrorAction();
+      reset_makeSuccessAction();
+      reset_makeFailureAction();
+      reset_validateApi();
+    });
 
     context('# when CALL_API is not passed', () => {
       const store = mockStore({});
@@ -36,29 +60,22 @@ describe('middleware', () => {
     });
 
     context('# when API config is invalid', () => {
-      const store = mockStore({});
-      store.dispatch({
-        [CALL_API]: {}
-      });
-      const actions = store.getActions();
+      let actions;
 
-      it('should dispatch one action', () => {
+      before(() => {
+        const store = mockStore({});
+        mock_validateApi.throws(new Error('failed for some reason'));
+        mock_makeStartErrorAction.returns(error => ({ type: 'START_ERROR', payload: error }));
+
+        store.dispatch({ [CALL_API]: {} });
+        actions = store.getActions();
+      });
+
+      it('should dispatch one action created by makeStartErrorAction', () => {
         expect(actions).to.have.length(1);
-      });
-
-      it('should have type of FETCH_START', () => {
-        expect(actions[0]).to.have.property('type', ACTION_FETCH_START);
-      });
-
-      it('should have error = true', () => {
-        expect(actions[0]).to.have.property('error', true);
-      });
-
-      it('should have payload.error with `invalid` message', () => {
-        expect(actions[0])
-          .to.have.property('payload')
-          .to.have.property('error')
-          .to.match(/invalid/);
+        const { payload } = actions[0];
+        expect(payload).to.be.an.instanceOf(Error);
+        expect(payload).to.have.property('message', 'failed for some reason');
       });
     });
 
@@ -82,6 +99,13 @@ describe('middleware', () => {
           },
         };
 
+        // validation ok
+        mock_validateApi.returns(true);
+        mock_makeStartAction.returns(() => ({ type: 'START' }))
+        mock_makeSuccessAction.returns(json => ({
+          type: 'SUCCESS',
+          payload: json,
+        }));
         mockAdapter.returns(fakeResponse(200, { key: 'value' }));
 
         store.dispatch(action).then(() => {
@@ -94,52 +118,20 @@ describe('middleware', () => {
         expect(actions).to.have.length(2);
       });
 
-      describe('FETCH_START action', () => {
-        it('should have type of FETCH_START', () => {
-          expect(actions[0]).to.have.property('type', ACTION_FETCH_START);
-        });
-
-        it('should not have property error', () => {
-          expect(actions[0]).to.not.have.property('error');
-        });
-
-        it('should have payload that includes the original API config', () => {
-          expect(actions[0]).to.have.property('payload');
-          const { payload } = actions[0];
-          expect(payload).to.have.property('name', 'USERS');
-          expect(payload).to.have.property('endpoint', 'http://localhost:9000/api/users');
-        });
+      it('should dispatch START action first', () => {
+        expect(actions[0]).to.have.property('type', 'START');
       });
 
-      describe('FETCH_COMPLETE action', () => {
-        it('should have type of FETCH_COMPLETE', () => {
-          expect(actions[1]).to.have.property('type', ACTION_FETCH_COMPLETE);
-        });
+      it('should dispatch SUCCESS action afterward', () => {
+        expect(actions[1]).to.have.property('type', 'SUCCESS');
+      });
 
-        it('should not have property error', () => {
-          expect(actions[1]).to.not.have.property('error');
-        });
-
-        it('should include the original API config in payload', () => {
-          expect(actions[1]).to.have.property('payload');
-          const { payload } = actions[1];
-          expect(payload).to.have.property('name', 'USERS');
-          expect(payload).to.have.property('endpoint', 'http://localhost:9000/api/users');
-        });
-
-        it('should include the json response in payload', () => {
-          const { payload: { json } } = actions[1];
-          expect(json).to.eql({ key: 'value' });
-        });
-
-        it('should include the timestamp response in payload', () => {
-          const { payload: { timestamp } } = actions[1];
-          expect(timestamp).to.equal(Date.now());
-        });
+      it('should dispatch SUCCESS action with json response in payload', () => {
+        expect(actions[1].payload).to.have.property('key', 'value');
       });
     });
 
-    context('# when API config is valid and API response is not ok', () => {
+    context('# when API config is valid but API response is not ok', () => {
       let actions;
 
       before(() => {
@@ -159,6 +151,13 @@ describe('middleware', () => {
           },
         };
 
+        // validation not ok
+        mock_validateApi.returns(true);
+        mock_makeStartAction.returns(() => ({ type: 'START' }))
+        mock_makeFailureAction.returns(json => ({
+          type: 'FAILURE',
+          payload: json,
+        }));
         mockAdapter.returns(fakeResponse(400, { error: 'value' }));
 
         store.dispatch(action).then(() => {
@@ -171,48 +170,16 @@ describe('middleware', () => {
         expect(actions).to.have.length(2);
       });
 
-      describe('FETCH_START action', () => {
-        it('should have type of FETCH_START', () => {
-          expect(actions[0]).to.have.property('type', ACTION_FETCH_START);
-        });
-
-        it('should not have property error', () => {
-          expect(actions[0]).to.not.have.property('error');
-        });
-
-        it('should have payload that includes the original API config', () => {
-          expect(actions[0]).to.have.property('payload');
-          const { payload } = actions[0];
-          expect(payload).to.have.property('name', 'USERS');
-          expect(payload).to.have.property('endpoint', 'http://localhost:9000/api/users');
-        });
+      it('should dispatch START action first', () => {
+        expect(actions[0]).to.have.property('type', 'START');
       });
 
-      describe('FETCH_FAILURE action', () => {
-        it('should have type of FETCH_FAILURE', () => {
-          expect(actions[1]).to.have.property('type', ACTION_FETCH_FAILURE);
-        });
+      it('should dispatch FAILURE action afterward', () => {
+        expect(actions[1]).to.have.property('type', 'FAILURE');
+      });
 
-        it('should not have property error', () => {
-          expect(actions[1]).to.not.have.property('error');
-        });
-
-        it('should include the original API config in payload', () => {
-          expect(actions[1]).to.have.property('payload');
-          const { payload } = actions[1];
-          expect(payload).to.have.property('name', 'USERS');
-          expect(payload).to.have.property('endpoint', 'http://localhost:9000/api/users');
-        });
-
-        it('should include the json response in payload', () => {
-          const { payload: { json } } = actions[1];
-          expect(json).to.eql({ error: 'value' });
-        });
-
-        it('should include the timestamp response in payload', () => {
-          const { payload: { timestamp } } = actions[1];
-          expect(timestamp).to.equal(Date.now());
-        });
+      it('should dispatch FAILURE action with json response in payload', () => {
+        expect(actions[1].payload).to.have.property('error', 'value');
       });
     });
   });

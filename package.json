@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "isomorphic-fetch": "^2.2.1",
     "redux": "^3.6.0",
     "redux-mock-store": "^1.2.0",
     "rollup": "^0.36.0",
@@ -17,6 +18,7 @@
     "rollup-plugin-buble": "^0.14.0",
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-strip": "^1.1.1",
+    "rollup-plugin-stub": "^1.1.0",
     "rollup-plugin-uglify": "^1.0.1",
     "sinon": "^1.17.6",
     "timekeeper": "^0.1.1"
