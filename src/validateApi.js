@@ -1,6 +1,4 @@
-const assertTypes = (value, types, msg) => {
-  if (types.test(typeof value)) throw new Error(msg)
-}
+import assertTypes from './utils/assertTypes'
 
 export const validateApi = api => {
   assertTypes(api.name, /string/, 'name must be a string');

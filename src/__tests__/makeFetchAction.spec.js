@@ -3,6 +3,18 @@ import { constant } from 'lodash';
 import makeFetchAction from '../makeFetchAction';
 
 describe.only('makeFetchAction', () => {
+  it('should throw error if a selector is not a function', () => {
+    expect(() => {
+      makeFetchAction(
+        'MUST_FAIL',
+        () => ({ endpoint: 'some path' }),
+        {
+          fail: 'must failed!!!'
+        }
+      );
+    }).to.throw('selector for "fail" must be a function')
+  });
+
   describe('no custom selectors', () => {
     let actual;
     before(() => {
