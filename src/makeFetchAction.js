@@ -1,0 +1,34 @@
+import get from './utils/get';
+import { CALL_API, REDUCER_PATH } from './constants';
+
+const makeSelectors = (descriptors, dataSelector) => {
+  const keys = Object.keys(descriptors);
+  const selectors = {};
+  keys.forEach(key => {
+    const fn = descriptors[key];
+    selectors[key + 'Selector'] = state => fn(dataSelector(state));
+  });
+  return selectors;
+};
+
+export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
+  const actionCreator = (...params) => ({
+    [CALL_API]: apiConfigFn(...params),
+  });
+
+  const isFetchingSelector = get([REDUCER_PATH, apiName, 'isFetching'], false);
+  const invalidatedSelector = get([REDUCER_PATH, apiName, 'invalidated'], false);
+  const dataSelector = get([REDUCER_PATH, apiName, 'data'], null);
+  const errorSelector = get([REDUCER_PATH, apiName, 'error'], null);
+
+  const otherSelectors = makeSelectors(selectorDescriptor, dataSelector);
+
+  return {
+    actionCreator,
+    ...otherSelectors,
+    isFetchingSelector,
+    invalidatedSelector,
+    dataSelector,
+    errorSelector,
+  };
+};

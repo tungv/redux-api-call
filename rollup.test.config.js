@@ -5,7 +5,7 @@ import babel from 'rollup-plugin-babel';
 import multiEntry from 'rollup-plugin-multi-entry';
 
 const tests = process.env.TESTS;
-const entry = tests ? tests.split(',').map(t => `src/__tests__/${t}.spec.js`) : 'src/__tests__/*.spec.js';
+const entry = tests ? tests.split(',').map(t => `src/**/__tests__/${t}.spec.js`) : 'src/**/__tests__/*.spec.js';
 
 export default {
   // entry: 'src/__tests__/actions.spec.js',
