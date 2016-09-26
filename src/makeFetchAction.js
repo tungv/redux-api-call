@@ -19,7 +19,7 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   });
 
   const isFetchingSelector = get([REDUCER_PATH, apiName, 'isFetching'], false);
-  const invalidatedSelector = get([REDUCER_PATH, apiName, 'invalidated'], false);
+  const isInvalidatedSelector = get([REDUCER_PATH, apiName, 'isInvalidated'], false);
   const dataSelector = get([REDUCER_PATH, apiName, 'data'], null);
   const errorSelector = get([REDUCER_PATH, apiName, 'error'], null);
 
@@ -29,7 +29,7 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     actionCreator,
     ...otherSelectors,
     isFetchingSelector,
-    invalidatedSelector,
+    isInvalidatedSelector,
     dataSelector,
     errorSelector,
   };

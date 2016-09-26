@@ -4,7 +4,7 @@ Redux utilities for API calls using fetch
 # The goals
 One command to create reducers, action creators and selectors for JSON API calls
 
-# Proposed interface
+# Interface
 
 ```js
 makeFetchAction = (
@@ -14,6 +14,7 @@ makeFetchAction = (
 ) => {
   actionCreator: (args: any) => FluxStandardAction,
   isFetchingSelector: (state: object) => boolean,
+  isInvalidatedSelector: (state: object) => boolean,
   dataSelector: (state: object) => any,
   errorSelector: (state: object) => any,
   ...otherSelectors: {
@@ -39,6 +40,7 @@ type SelectorDescriptor = {
 const {
   actionCreator,
   isFetchingSelector,
+  isInvalidatedSelector,
   dataSelector,
   errorSelector,
   latestTodoSelector,
@@ -117,10 +119,10 @@ class TodosComponent extends React.Component {
     // first fetch
     this.props.fetchTodos();
   }
-  
+
   render() {
     const { loading, error, completeTodos, incompleteTodos } = this.props;
-    
+
     return (
       <div>
         {/* ... your markup ...*/}

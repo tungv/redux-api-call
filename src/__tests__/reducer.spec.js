@@ -43,8 +43,8 @@ describe('reducer', () => {
       expect(get(next, 'SAMPLE.isFetching')).to.equal(true);
     });
 
-    it('should set invalidated to true', () => {
-      expect(get(next, 'SAMPLE.invalidated')).to.equal(true);
+    it('should set isInvalidated to true', () => {
+      expect(get(next, 'SAMPLE.isInvalidated')).to.equal(true);
     });
 
     it('should set lastRequest to the requestedAt time', () => {
@@ -88,8 +88,8 @@ describe('reducer', () => {
       expect(get(next, 'SAMPLE.isFetching')).to.equal(false);
     });
 
-    it('should set invalidated to true', () => {
-      expect(get(next, 'SAMPLE.invalidated')).to.equal(true);
+    it('should set isInvalidated to true', () => {
+      expect(get(next, 'SAMPLE.isInvalidated')).to.equal(true);
     });
 
     it('should set lastRequest to requestedAt time', () => {
@@ -131,8 +131,8 @@ describe('reducer', () => {
       expect(get(next, 'SAMPLE.isFetching')).to.equal(false);
     });
 
-    it('should set invalidated to false', () => {
-      expect(get(next, 'SAMPLE.invalidated')).to.equal(false);
+    it('should set isInvalidated to false', () => {
+      expect(get(next, 'SAMPLE.isInvalidated')).to.equal(false);
     });
 
     it('should set lastResponse = respondedAt', () => {
@@ -175,8 +175,8 @@ describe('reducer', () => {
       expect(get(next, 'SAMPLE.isFetching')).to.equal(false);
     });
 
-    it('should set invalidated to false', () => {
-      expect(get(next, 'SAMPLE.invalidated')).to.equal(true);
+    it('should set isInvalidated to false', () => {
+      expect(get(next, 'SAMPLE.isInvalidated')).to.equal(true);
     });
 
     it('should keep old lastResponse', () => {

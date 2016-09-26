@@ -19,7 +19,7 @@ const reducer = handleActions({
       ...api,
       lastRequest: getRequestedAt(action),
       isFetching: !action.error,
-      invalidated: true,
+      isInvalidated: true,
       error: action.error ? getError(action) : null,
     };
 
@@ -34,7 +34,7 @@ const reducer = handleActions({
     const next = {
       ...api,
       isFetching: false,
-      invalidated: false,
+      isInvalidated: false,
       lastResponse: getRespondedAt(action),
       data: getJSONResponse(action),
       error: null,
@@ -51,7 +51,7 @@ const reducer = handleActions({
     const next = {
       ...api,
       isFetching: false,
-      invalidated: true,
+      isInvalidated: true,
       error: getJSONResponse(action),
     };
 

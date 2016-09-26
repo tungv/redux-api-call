@@ -40,8 +40,8 @@ describe('makeFetchAction', () => {
       expect(actual).to.have.property('errorSelector').to.be.an.instanceOf(Function);
     });
 
-    it('should return invalidatedSelector function', () => {
-      expect(actual).to.have.property('invalidatedSelector').to.be.an.instanceOf(Function);
+    it('should return isInvalidatedSelector function', () => {
+      expect(actual).to.have.property('isInvalidatedSelector').to.be.an.instanceOf(Function);
     });
 
     describe('selectors', () => {
@@ -69,27 +69,27 @@ describe('makeFetchAction', () => {
         });
       });
 
-      describe('invalidatedSelector', () => {
-        it('should return invalidated in state if present', () => {
-          expect(actual.invalidatedSelector({
+      describe('isInvalidatedSelector', () => {
+        it('should return isInvalidated in state if present', () => {
+          expect(actual.isInvalidatedSelector({
             api_calls: {
               SAMPLE: {
-                invalidated: true
+                isInvalidated: true
               }
             }
           })).to.equal(true);
 
-          expect(actual.invalidatedSelector({
+          expect(actual.isInvalidatedSelector({
             api_calls: {
               SAMPLE: {
-                invalidated: false
+                isInvalidated: false
               }
             }
           })).to.equal(false);
         });
 
         it('should return false if api was not called', () => {
-          expect(actual.invalidatedSelector({})).to.equal(false);
+          expect(actual.isInvalidatedSelector({})).to.equal(false);
         });
       });
 
