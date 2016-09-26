@@ -16,7 +16,10 @@ export const makeStartErrorAction = api => (error) => ({
 
 export const makeStartAction = api => () => ({
   type: ACTION_FETCH_START,
-  payload: api,
+  payload: {
+    ...api,
+    requestedAt: Date.now(),
+  },
 });
 
 export const makeSuccessAction = api => (json) => ({
@@ -24,7 +27,7 @@ export const makeSuccessAction = api => (json) => ({
   payload: {
     ...api,
     json,
-    timestamp: Date.now(),
+    respondedAt: Date.now(),
   },
 });
 
@@ -33,6 +36,6 @@ export const makeFailureAction = api => json => ({
   payload: {
     ...api,
     json,
-    timestamp: Date.now(),
+    respondedAt: Date.now(),
   },
 });

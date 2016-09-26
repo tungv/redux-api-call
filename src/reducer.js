@@ -7,6 +7,8 @@ import { handleActions } from 'redux-actions';
 
 const getName = action => action.payload.name;
 const getRequestedAt = action => action.payload.requestedAt;
+const getRespondedAt = action => action.payload.respondedAt;
+const getJSONResponse = action => action.payload.json;
 const getError = action => action.payload.error;
 
 const reducer = handleActions({
@@ -19,6 +21,38 @@ const reducer = handleActions({
       isFetching: !action.error,
       invalidated: true,
       error: action.error ? getError(action) : null,
+    };
+
+    return {
+      ...state,
+      [apiName]: next,
+    };
+  },
+  [ACTION_FETCH_COMPLETE]: (state, action) => {
+    const apiName = getName(action);
+    const api = state[apiName];
+    const next = {
+      ...api,
+      isFetching: false,
+      invalidated: false,
+      lastResponse: getRespondedAt(action),
+      data: getJSONResponse(action),
+      error: null,
+    };
+
+    return {
+      ...state,
+      [apiName]: next,
+    };
+  },
+  [ACTION_FETCH_FAILURE]: (state, action) => {
+    const apiName = getName(action);
+    const api = state[apiName];
+    const next = {
+      ...api,
+      isFetching: false,
+      invalidated: true,
+      error: getJSONResponse(action),
     };
 
     return {

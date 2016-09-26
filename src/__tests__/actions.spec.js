@@ -1,9 +1,18 @@
+import timekeeper from 'timekeeper';
 import { expect } from 'chai';
 import { forEach } from 'lodash';
 import { ACTION_FETCH_START, ACTION_FETCH_COMPLETE, ACTION_FETCH_FAILURE } from '../constants';
 import { makeStartErrorAction, makeStartAction, makeSuccessAction, makeFailureAction } from '../actions';
 
 describe('Action Creators', () => {
+  before(() => {
+    timekeeper.freeze(Date.now());
+  });
+
+  after(() => {
+    timekeeper.reset();
+  });
+
   describe('makeStartErrorAction', () => {
     let action;
     const SAMPLE_API = {
@@ -55,7 +64,13 @@ describe('Action Creators', () => {
     });
 
     it('should include api config in payload', () => {
-      expect(action.payload).to.equal(SAMPLE_API);
+      forEach(SAMPLE_API, (value, key) => {
+        expect(action.payload).to.have.property(key, value);
+      });
+    });
+
+    it('should include requested time as `requestedAt` prop', () => {
+      expect(action.payload.requestedAt).to.equal(Date.now());
     });
   });
 
