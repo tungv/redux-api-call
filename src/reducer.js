@@ -3,7 +3,7 @@ import {
   ACTION_FETCH_COMPLETE,
   ACTION_FETCH_FAILURE,
 } from './constants';
-import { handleActions } from 'redux-actions';
+import handleActions from './utils/handleActions';
 
 const getName = action => action.payload.name;
 const getRequestedAt = action => action.payload.requestedAt;
@@ -60,6 +60,6 @@ const reducer = handleActions({
       [apiName]: next,
     };
   },
-}, {});
+});
 
 export default reducer;

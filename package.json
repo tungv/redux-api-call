@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Redux utilities for making API calls",
   "scripts": {
-    "pretest": "rollup -c rollup.test.config.js -m",
+    "build": "rollup -c",
+    "pretest": "rollup -c rollup.test.config.js",
     "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js",
     "test:watch": "npm test || true && chokidar '{src}/**/*.js' -c 'npm test'"
   },
@@ -25,6 +26,7 @@
     "rollup-plugin-alias": "^1.2.0",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-buble": "^0.14.0",
+    "rollup-plugin-cleanup": "^0.1.4",
     "rollup-plugin-multi-entry": "^2.0.1",
     "rollup-plugin-strip": "^1.1.1",
     "rollup-plugin-stub": "^1.1.0",
@@ -32,8 +34,5 @@
     "sinon": "^1.17.6",
     "source-map-support": "^0.4.2",
     "timekeeper": "^0.1.1"
-  },
-  "dependencies": {
-    "redux-actions": "^0.12.0"
   }
 }
