@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { constant } from 'lodash';
 import makeFetchAction from '../makeFetchAction';
 
-describe.only('makeFetchAction', () => {
+describe('makeFetchAction', () => {
   it('should throw error if a selector is not a function', () => {
     expect(() => {
       makeFetchAction(
