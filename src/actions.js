@@ -9,8 +9,8 @@ export const makeStartErrorAction = api => (error) => ({
   type: ACTION_FETCH_START,
   error: true,
   payload: {
-    ...api,
     error,
+    ...api,
   },
 });
 

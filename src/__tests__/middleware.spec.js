@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import configureStore from 'redux-mock-store';
 import { stub } from 'sinon';
 import timekeeper from 'timekeeper';
-import fakeResponse from './makeFakeJSONResponse';
 import { CALL_API } from '../constants.js';
 import { stub_validateApi, reset_validateApi } from '../validateApi.js';
 import {
@@ -13,6 +12,11 @@ import {
 } from '../actions';
 
 import middleware from '../middleware';
+const fakeResponse = (status, json) => Promise.resolve({
+  ok: status < 400,
+  status,
+  json: () => Promise.resolve(json)
+});
 
 describe('middleware', () => {
   it('should be a function', () => {
