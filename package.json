@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
   "scripts": {
