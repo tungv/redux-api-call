@@ -1,5 +1,6 @@
 import { CALL_API } from './constants';
 import { validateApi } from './validateApi.js';
+import defaultAdapter from './defaultAdapter'
 import {
   makeStartAction,
   makeStartErrorAction,
@@ -7,7 +8,7 @@ import {
   makeFailureAction,
 } from './actions'
 
-export default (adapter) => ({ dispatch, getState }) => next => action => {
+export default (adapter = defaultAdapter) => ({ dispatch, getState }) => next => action => {
   if (!action || !action[CALL_API]) {
     next(action);
     return;
