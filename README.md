@@ -1,6 +1,11 @@
 # redux-api-call
 Redux utilities for API calls using fetch
 
+# Installation
+```
+npm i -S redux-api-call
+```
+
 # The goals
 One command to create reducers, action creators and selectors for JSON API calls
 
