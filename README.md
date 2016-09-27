@@ -84,7 +84,11 @@ const rootReducer = combineReducers({
 import { createStore, applyMiddleware } from 'redux'
 import { middleware as apiMiddleware } from 'redux-api-call'
 
-const store = createStore(rootReducer, {}, applyMiddleware(apiMiddleware));
+const middlewares = applyMiddleware(
+  apiMiddleware()
+  // ... other middlewares
+);
+const store = createStore(rootReducer, {}, middlewares);
 
 // state.js
 import { makeFetchAction } from 'redux-api-call'

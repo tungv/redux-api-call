@@ -15,7 +15,10 @@ const makeSelectors = (descriptors, dataSelector) => {
 
 export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   const actionCreator = (...params) => ({
-    [CALL_API]: apiConfigFn(...params),
+    [CALL_API]: {
+      ...apiConfigFn(...params),
+      name: apiName,
+    },
   });
 
   const isFetchingSelector = get([REDUCER_PATH, apiName, 'isFetching'], false);
