@@ -1,3 +1,3 @@
-export default ({ endpoint, others }) => {
+export default ({ endpoint, ...others }) => {
   return fetch(endpoint, others);
 };
