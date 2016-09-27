@@ -1,13 +1,17 @@
 {
   "name": "redux-api-call",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Redux utilities for making API calls",
+  "repository": "https://github.com/tungv/redux-api-call.git",
   "scripts": {
+    "prebuild": "rm -rf .build || true",
     "build": "rollup -c",
+    "postbuild": "cp {package.json,README.md} .build",
     "pretest": "rollup -c rollup.test.config.js",
     "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js",
     "test:watch": "npm test || true && chokidar '{src}/**/*.js' -c 'npm test'"
   },
+  "main": "index.js",
   "devDependencies": {
     "babel-core": "^6.14.0",
     "babel-plugin-external-helpers": "^6.8.0",
