@@ -7,6 +7,9 @@
     "prebuild": "rm -rf .build || true",
     "build": "rollup -c",
     "postbuild": "cp {package.json,README.md} .build",
+    "prepatch": "git commit -am\"prepare to deploy\"",
+    "patch": "npm version patch; git commit -am\"BUMP VERSION\"",
+    "postpatch": "cd .build; npm publish",
     "pretest": "rollup -c rollup.test.config.js",
     "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js",
     "test:watch": "npm test || true && chokidar '{src}/**/*.js' -c 'npm test'"
