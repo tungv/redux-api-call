@@ -11,6 +11,8 @@ One command to create reducers, action creators and selectors for JSON API calls
 
 # Interface
 
+[Detailed API Reference](https://github.com/tungv/redux-api-call/wiki/API-Reference)
+
 ```js
 makeFetchAction = (
   apiName: string,

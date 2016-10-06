@@ -8,7 +8,7 @@
     "build": "rollup -c",
     "postbuild": "cp {package.json,README.md} .build",
     "prepatch": "git commit -am\"prepare to deploy\"",
-    "patch": "npm version patch; git commit -am\"BUMP VERSION\"",
+    "patch": "npm version patch; npm run build",
     "postpatch": "cd .build; npm publish",
     "pretest": "rollup -c rollup.test.config.js",
     "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js --reporter progress",
