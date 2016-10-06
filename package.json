@@ -7,7 +7,7 @@
     "prebuild": "rm -rf .build || true",
     "build": "rollup -c",
     "postbuild": "cp {package.json,README.md} .build",
-    "prepatch": "git commit -am\"prepare to deploy\"",
+    "prepatch": "git commit -am\"prepare to deploy\" || true",
     "patch": "npm version patch; npm run build",
     "postpatch": "cd .build; npm publish",
     "pretest": "rollup -c rollup.test.config.js",
