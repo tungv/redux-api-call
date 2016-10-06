@@ -186,5 +186,87 @@ describe('middleware', () => {
         expect(actions[1].payload).to.have.property('error', 'value');
       });
     });
+
+    context('# when API config is a function', () => {
+      let actions;
+      const initialState = { path: 'from-state' };
+
+      before(done => {
+        const store = mockStore(initialState);
+
+        // validation ok
+        mock_validateApi.returns(true);
+        mock_makeStartAction.returns(() => ({ type: 'START' }))
+        mock_makeSuccessAction.returns(json => ({
+          type: 'SUCCESS',
+          payload: json,
+        }));
+        mockAdapter.returns(fakeResponse(200, { key: 'value' }));
+
+        const action = {
+          [CALL_API]: state => ({
+            endpoint: `http://localhost/${state.path}`
+          })
+        };
+
+        store.dispatch(action).then(() => {
+          actions = store.getActions();
+          done();
+        });
+      });
+
+      it('should dispatch 2 actions', () => {
+        expect(actions).to.have.length(2);
+      });
+
+      it('should dispatch START action first', () => {
+        expect(actions[0]).to.have.property('type', 'START')
+      });
+
+      it('should get data from state', () => {
+        expect(mock_makeStartAction.lastCall.args[0]).to.eql({ endpoint: 'http://localhost/from-state' });
+      });
+
+      it('should dispatch SUCCESS action afterward', () => {
+        expect(actions[1]).to.have.property('type', 'SUCCESS')
+      });
+    });
+
+    context('# when API config is a function that throw', () => {
+      let actions;
+      const initialState = { shouldThrow: true };
+
+      before(() => {
+        const store = mockStore(initialState);
+
+        // validation ok
+        mock_validateApi.returns(true);
+        mock_makeStartErrorAction.returns(() => ({ type: 'START_ERROR' }))
+        mock_makeSuccessAction.returns(json => ({
+          type: 'SUCCESS',
+          payload: json,
+        }));
+        mockAdapter.returns(fakeResponse(200, { key: 'value' }));
+
+        const action = {
+          [CALL_API]: state => {
+            if (state.shouldThrow) {
+              throw new Error
+            }
+          }
+        };
+
+        store.dispatch(action);
+        actions = store.getActions();
+      });
+
+      it('should dispatch 1 action', () => {
+        expect(actions).to.have.length(1);
+      });
+
+      it('should dispatch START action with error', () => {
+        expect(actions[0]).to.have.property('type', 'START_ERROR')
+      });
+    });
   });
 });

@@ -11,7 +11,7 @@
     "patch": "npm version patch; git commit -am\"BUMP VERSION\"",
     "postpatch": "cd .build; npm publish",
     "pretest": "rollup -c rollup.test.config.js",
-    "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js",
+    "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js --reporter progress",
     "test:watch": "npm test || true && chokidar '{src}/**/*.js' -c 'npm test'"
   },
   "main": "index.js",

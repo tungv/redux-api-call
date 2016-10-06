@@ -15,12 +15,11 @@ export default (adapter = defaultAdapter) => ({ dispatch, getState }) => next =>
   }
 
   const api = action[CALL_API];
-  try {
-    validateApi(api);
 
-    // valid api
-    // TODO: wrap all functions with getState()
-    const finalApi = api;
+  try {
+    const finalApi = typeof api === 'function' ? api(getState()) : api;
+    validateApi(finalApi);
+
     dispatch(makeStartAction(finalApi)());
 
     // sending request
