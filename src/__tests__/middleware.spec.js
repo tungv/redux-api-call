@@ -204,8 +204,8 @@ describe('middleware', () => {
         mockAdapter.returns(fakeResponse(200, { key: 'value' }));
 
         const action = {
-          [CALL_API]: state => ({
-            endpoint: `http://localhost/${state.path}`
+          [CALL_API]: ({
+            endpoint: state => `http://localhost/${state.path}`
           })
         };
 
@@ -249,9 +249,11 @@ describe('middleware', () => {
         mockAdapter.returns(fakeResponse(200, { key: 'value' }));
 
         const action = {
-          [CALL_API]: state => {
-            if (state.shouldThrow) {
-              throw new Error
+          [CALL_API]: {
+            endpoint: state => {
+              if (state.shouldThrow) {
+                throw new Error
+              }
             }
           }
         };

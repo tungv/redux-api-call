@@ -17,7 +17,12 @@ export default (adapter = defaultAdapter) => ({ dispatch, getState }) => next =>
   const api = action[CALL_API];
 
   try {
-    const finalApi = typeof api === 'function' ? api(getState()) : api;
+
+    const finalApi = Object.keys(api).reduce((obj, key) => ({
+      ...obj,
+      [key]: typeof api[key] === 'function' ? api[key](getState()) : api[key],
+    }), {});
+
     validateApi(finalApi);
 
     dispatch(makeStartAction(finalApi)());

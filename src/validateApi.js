@@ -8,7 +8,7 @@ export const validateApi = api => {
 
   assertTypes(
     api.endpoint,
-    /string/,
+    /string|function/,
     'endpoint must be either a string or a function'
   );
 };
