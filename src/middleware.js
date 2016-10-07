@@ -29,14 +29,14 @@ export default (adapter = defaultAdapter) => ({ dispatch, getState }) => next =>
 
     // sending request
     return new Promise((resolve, reject) => {
-      const responsePromise = adapter(api);
+      const responsePromise = adapter(finalApi);
 
       responsePromise.then(resp => {
         if (resp.ok) {
-          return resp.json().then(makeSuccessAction(api));
+          return resp.json().then(makeSuccessAction(finalApi));
         }
 
-        return resp.json().then(makeFailureAction(api));
+        return resp.json().then(makeFailureAction(finalApi));
       })
       .then(dispatch)
       .then(resolve);
