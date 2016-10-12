@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/tungv/redux-api-call.svg?style=svg)](https://circleci.com/gh/tungv/redux-api-call)
+
 # redux-api-call
 Redux utilities for API calls using fetch
 
