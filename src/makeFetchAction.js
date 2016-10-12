@@ -10,11 +10,11 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     },
   });
 
-  const updater = payload => ({
+  const updater = data => ({
     type: ACTION_UPDATE_LOCAL,
     payload: {
-      ...payload,
       name: apiName,
+      data,
     },
   });
 

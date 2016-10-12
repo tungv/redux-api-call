@@ -203,7 +203,7 @@ describe('reducer', () => {
         endpoint: 'http://example.com',
       };
       const json = { error: 'new error' };
-      return reducer(state, { type: '@@api/UPDATE_LOCAL', payload: { name: 'SAMPLE', key: 'new_value' } });
+      return reducer(state, { type: '@@api/UPDATE_LOCAL', payload: { name: 'SAMPLE', data: { key: 'new_value' } } });
     };
 
     it('should update local', () => {

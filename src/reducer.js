@@ -20,14 +20,6 @@ const updateWith = (state, name, obj) => ({
   },
 });
 
-const updateWithFunction = (state, name, fn) => ({
-  ...state,
-  [name]: {
-    ...state[name],
-    ...(state[name] && fn(state[name])),
-  },
-});
-
 const reducer = handleActions({
   [ACTION_FETCH_START]: (state, action) => updateWith(
     state,
@@ -53,15 +45,11 @@ const reducer = handleActions({
       isInvalidated: true,
       error: getJSONResponse(action),
     }),
-  [ACTION_UPDATE_LOCAL]: (state, action) => updateWithFunction(
+  [ACTION_UPDATE_LOCAL]: (state, action) => updateWith(
     state,
-    getName(action),
-    ({ data }) => ({
-      data: {
-        ...data,
-        ...action.payload,
-      },
-    })),
+    getName(action), {
+      data: action.payload.data,
+    }),
 });
 
 export default reducer;
