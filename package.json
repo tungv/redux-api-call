@@ -10,13 +10,43 @@
     "prepatch": "git commit -am\"prepare to deploy\" || true",
     "patch": "npm version patch; npm run build",
     "postpatch": "cd .build; npm publish",
-    "pretest": "rollup -c rollup.test.config.js",
-    "test": "mocha --require source-map-support/register --require isomorphic-fetch .build/tests.js --reporter progress",
-    "test:watch": "npm test || true && chokidar '{src}/**/*.js' -c 'npm test'"
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "jest": {
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(js)$",
+    "setupFiles": [
+      "node_modules/isomorphic-fetch/fetch-npm-node.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "vendor",
+      ".build"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "node"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy",
+      "^.+\\.(scss|css|less)(\\?\\w*)?$": "identity-obj-proxy"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "__mocks__",
+      "__tests__"
+    ],
+    "collectCoverageFrom": [
+      "**/*.{js}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   },
   "main": "index.js",
   "devDependencies": {
     "babel-core": "^6.14.0",
+    "babel-jest": "^16.0.0",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
@@ -26,6 +56,7 @@
     "babel-preset-stage-1": "^6.13.0",
     "chai": "^3.5.0",
     "isomorphic-fetch": "^2.2.1",
+    "jest-cli": "^16.0.1",
     "lodash": "^4.16.1",
     "redux": "^3.6.0",
     "redux-mock-store": "^1.2.0",
@@ -41,5 +72,6 @@
     "sinon": "^1.17.6",
     "source-map-support": "^0.4.2",
     "timekeeper": "^0.1.1"
-  }
+  },
+  "dependencies": {}
 }

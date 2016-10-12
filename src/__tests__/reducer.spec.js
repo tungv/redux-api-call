@@ -10,11 +10,11 @@ import {
 import reducer from '../reducer';
 
 describe('reducer', () => {
-  before(() => {
+  beforeAll(() => {
     timekeeper.freeze(Date.now());
   });
 
-  after(() => {
+  afterAll(() => {
     timekeeper.reset();
   });
 
@@ -31,7 +31,7 @@ describe('reducer', () => {
       }
     };
 
-    before(() => {
+    beforeAll(() => {
       const api = {
         name: 'SAMPLE',
         endpoint: 'http://example.com'
@@ -74,7 +74,7 @@ describe('reducer', () => {
       }
     };
 
-    before(() => {
+    beforeAll(() => {
       const api = {
         name: 'SAMPLE',
         endpoint: 'http://example.com',
@@ -118,7 +118,7 @@ describe('reducer', () => {
       }
     };
 
-    before(() => {
+    beforeAll(() => {
       const api = {
         name: 'SAMPLE',
         endpoint: 'http://example.com',
@@ -162,7 +162,7 @@ describe('reducer', () => {
       }
     };
 
-    before(() => {
+    beforeAll(() => {
       const api = {
         name: 'SAMPLE',
         endpoint: 'http://example.com',

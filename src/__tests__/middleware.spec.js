@@ -2,16 +2,20 @@ import { expect } from 'chai';
 import configureStore from 'redux-mock-store';
 import { stub } from 'sinon';
 import timekeeper from 'timekeeper';
-import { CALL_API } from '../constants.js';
-import { stub_validateApi, reset_validateApi } from '../validateApi.js';
+import { CALL_API } from '../constants';
+import { validateApi } from '../validateApi';
 import {
-  stub_makeStartAction, reset_makeStartAction,
-  stub_makeStartErrorAction, reset_makeStartErrorAction,
-  stub_makeSuccessAction, reset_makeSuccessAction,
-  stub_makeFailureAction, reset_makeFailureAction,
+  makeStartAction,
+  makeStartErrorAction,
+  makeSuccessAction,
+  makeFailureAction,
 } from '../actions';
 
 import middleware from '../middleware';
+
+jest.mock('../validateApi.js');
+jest.mock('../actions.js');
+
 const fakeResponse = (status, json) => Promise.resolve({
   ok: status < 400,
   status,
@@ -26,29 +30,8 @@ describe('middleware', () => {
   describe('with store', () => {
     const mockAdapter = stub();
     const mockStore = configureStore([middleware(mockAdapter)]);
-    const mock_makeStartAction = stub();
-    const mock_makeStartErrorAction = stub();
-    const mock_makeSuccessAction = stub();
-    const mock_makeFailureAction = stub();
-    const mock_validateApi = stub();
 
-    before(() => {
-      stub_makeStartAction(mock_makeStartAction);
-      stub_makeStartErrorAction(mock_makeStartErrorAction);
-      stub_makeSuccessAction(mock_makeSuccessAction);
-      stub_makeFailureAction(mock_makeFailureAction);
-      stub_validateApi(mock_validateApi);
-    });
-
-    after(() => {
-      reset_makeStartAction();
-      reset_makeStartErrorAction();
-      reset_makeSuccessAction();
-      reset_makeFailureAction();
-      reset_validateApi();
-    });
-
-    context('# when CALL_API is not passed', () => {
+    describe('# when CALL_API is not passed', () => {
       const store = mockStore({});
       const actions = [{
         type: 'ANYTHING',
@@ -63,13 +46,13 @@ describe('middleware', () => {
       });
     });
 
-    context('# when API config is invalid', () => {
+    describe('# when API config is invalid', () => {
       let actions;
 
-      before(() => {
+      beforeAll(() => {
         const store = mockStore({});
-        mock_validateApi.throws(new Error('failed for some reason'));
-        mock_makeStartErrorAction.returns(error => ({ type: 'START_ERROR', payload: error }));
+        validateApi.throws(new Error('failed for some reason'));
+        makeStartErrorAction.returns(error => ({ type: 'START_ERROR', payload: error }));
 
         store.dispatch({ [CALL_API]: {} });
         actions = store.getActions();
@@ -83,18 +66,18 @@ describe('middleware', () => {
       });
     });
 
-    context('# when API config is valid and API response is ok', () => {
+    describe('# when API config is valid and API response is ok', () => {
       let actions;
 
-      before(() => {
+      beforeAll(() => {
         timekeeper.freeze(Date.now());
       });
 
-      after(() => {
+      afterAll(() => {
         timekeeper.reset();
       });
 
-      before(done => {
+      beforeAll(done => {
         const store = mockStore({});
         const action = {
           [CALL_API]: {
@@ -104,9 +87,9 @@ describe('middleware', () => {
         };
 
         // validation ok
-        mock_validateApi.returns(true);
-        mock_makeStartAction.returns(() => ({ type: 'START' }))
-        mock_makeSuccessAction.returns(json => ({
+        validateApi.returns(true);
+        makeStartAction.returns(() => ({ type: 'START' }))
+        makeSuccessAction.returns(json => ({
           type: 'SUCCESS',
           payload: json,
         }));
@@ -135,18 +118,18 @@ describe('middleware', () => {
       });
     });
 
-    context('# when API config is valid but API response is not ok', () => {
+    describe('# when API config is valid but API response is not ok', () => {
       let actions;
 
-      before(() => {
+      beforeAll(() => {
         timekeeper.freeze(Date.now());
       });
 
-      after(() => {
+      afterAll(() => {
         timekeeper.reset();
       });
 
-      before(done => {
+      beforeAll(done => {
         const store = mockStore({});
         const action = {
           [CALL_API]: {
@@ -156,9 +139,9 @@ describe('middleware', () => {
         };
 
         // validation not ok
-        mock_validateApi.returns(true);
-        mock_makeStartAction.returns(() => ({ type: 'START' }))
-        mock_makeFailureAction.returns(json => ({
+        validateApi.returns(true);
+        makeStartAction.returns(() => ({ type: 'START' }))
+        makeFailureAction.returns(json => ({
           type: 'FAILURE',
           payload: json,
         }));
@@ -187,17 +170,17 @@ describe('middleware', () => {
       });
     });
 
-    context('# when API config is a function', () => {
+    describe('# when API config is a function', () => {
       let actions;
       const initialState = { path: 'from-state' };
 
-      before(done => {
+      beforeAll(done => {
         const store = mockStore(initialState);
 
         // validation ok
-        mock_validateApi.returns(true);
-        mock_makeStartAction.returns(() => ({ type: 'START' }))
-        mock_makeSuccessAction.returns(json => ({
+        validateApi.returns(true);
+        makeStartAction.returns(() => ({ type: 'START' }))
+        makeSuccessAction.returns(json => ({
           type: 'SUCCESS',
           payload: json,
         }));
@@ -224,7 +207,7 @@ describe('middleware', () => {
       });
 
       it('should get data from state', () => {
-        expect(mock_makeStartAction.lastCall.args[0]).to.eql({ endpoint: 'http://localhost/from-state' });
+        expect(makeStartAction.lastCall.args[0]).to.eql({ endpoint: 'http://localhost/from-state' });
       });
 
       it('should dispatch SUCCESS action afterward', () => {
@@ -232,17 +215,17 @@ describe('middleware', () => {
       });
     });
 
-    context('# when API config is a function that throw', () => {
+    describe('# when API config is a function that throw', () => {
       let actions;
       const initialState = { shouldThrow: true };
 
-      before(() => {
+      beforeAll(() => {
         const store = mockStore(initialState);
 
         // validation ok
-        mock_validateApi.returns(true);
-        mock_makeStartErrorAction.returns(() => ({ type: 'START_ERROR' }))
-        mock_makeSuccessAction.returns(json => ({
+        validateApi.returns(true);
+        makeStartErrorAction.returns(() => ({ type: 'START_ERROR' }))
+        makeSuccessAction.returns(json => ({
           type: 'SUCCESS',
           payload: json,
         }));
