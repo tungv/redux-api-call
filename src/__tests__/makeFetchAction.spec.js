@@ -3,18 +3,6 @@ import { constant } from 'lodash';
 import makeFetchAction from '../makeFetchAction';
 
 describe('makeFetchAction', () => {
-  it('should throw error if a selector is not a function', () => {
-    expect(() => {
-      makeFetchAction(
-        'MUST_FAIL',
-        () => ({ endpoint: 'some path' }),
-        {
-          fail: 'must failed!!!'
-        }
-      );
-    }).to.throw('selector for "fail" must be a function')
-  });
-
   describe('no custom selectors', () => {
     let actual;
     beforeAll(() => {
@@ -125,51 +113,6 @@ describe('makeFetchAction', () => {
         it('should return null if api was not called', () => {
           expect(actual.errorSelector({})).to.equal(null);
         });
-      });
-    });
-  });
-
-  describe('custom selectors', () => {
-    let actual;
-    beforeAll(() => {
-      actual = makeFetchAction(
-        'SAMPLE',
-        constant({ endpoint: 'http://example.com' }),
-        {
-          data1: data => data.key1,
-          data2: data => data.key2,
-        }
-      );
-    });
-
-    it('should return data1Selector and data2Selector functions', () => {
-      expect(actual).to.have.property('data1Selector').to.be.an.instanceOf(Function);
-      expect(actual).to.have.property('data2Selector').to.be.an.instanceOf(Function);
-    });
-
-    describe('custom selector functions', () => {
-      it('should return value based on dataSelector', () => {
-        expect(actual.data1Selector({
-          api_calls: {
-            SAMPLE: {
-              data: {
-                key1: 'key1',
-                key2: 'key2',
-              },
-            },
-          },
-        })).to.equal('key1');
-
-        expect(actual.data2Selector({
-          api_calls: {
-            SAMPLE: {
-              data: {
-                key1: 'key1',
-                key2: 'key2',
-              },
-            },
-          },
-        })).to.equal('key2');
       });
     });
   });
