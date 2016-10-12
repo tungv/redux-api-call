@@ -5,6 +5,7 @@ import {
   ACTION_FETCH_START,
   ACTION_FETCH_COMPLETE,
   ACTION_FETCH_FAILURE,
+  ACTION_UPDATE_LOCAL,
 } from './constants';
 import reducer from './reducer'
 
