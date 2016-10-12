@@ -1,3 +1,4 @@
+import { stub } from 'sinon';
 import { expect } from 'chai';
 import { constant } from 'lodash';
 import makeFetchAction from '../makeFetchAction';
