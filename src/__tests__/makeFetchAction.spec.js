@@ -17,7 +17,7 @@ describe('makeFetchAction', () => {
 
   describe('no custom selectors', () => {
     let actual;
-    before(() => {
+    beforeAll(() => {
       actual = makeFetchAction(
         'SAMPLE',
         constant({ endpoint: 'http://example.com' })
@@ -131,7 +131,7 @@ describe('makeFetchAction', () => {
 
   describe('custom selectors', () => {
     let actual;
-    before(() => {
+    beforeAll(() => {
       actual = makeFetchAction(
         'SAMPLE',
         constant({ endpoint: 'http://example.com' }),

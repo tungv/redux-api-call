@@ -5,11 +5,11 @@ import { ACTION_FETCH_START, ACTION_FETCH_COMPLETE, ACTION_FETCH_FAILURE } from 
 import { makeStartErrorAction, makeStartAction, makeSuccessAction, makeFailureAction } from '../actions';
 
 describe('Action Creators', () => {
-  before(() => {
+  beforeAll(() => {
     timekeeper.freeze(Date.now());
   });
 
-  after(() => {
+  afterAll(() => {
     timekeeper.reset();
   });
 
@@ -21,7 +21,7 @@ describe('Action Creators', () => {
     };
     const SAMPLE_ERROR = new Error('some error');
 
-    before(() => {
+    beforeAll(() => {
       action = makeStartErrorAction(SAMPLE_API)(SAMPLE_ERROR);
     })
 
@@ -51,7 +51,7 @@ describe('Action Creators', () => {
       endpoint: 'http://example.com',
     };
 
-    before(() => {
+    beforeAll(() => {
       action = makeStartAction(SAMPLE_API)();
     })
 
@@ -84,7 +84,7 @@ describe('Action Creators', () => {
       key: 'value',
     };
 
-    before(() => {
+    beforeAll(() => {
       action = makeSuccessAction(SAMPLE_API)(SAMPLE_RESPONSE);
     })
 
@@ -117,7 +117,7 @@ describe('Action Creators', () => {
       error: 'reason',
     };
 
-    before(() => {
+    beforeAll(() => {
       action = makeFailureAction(SAMPLE_API)(SAMPLE_ERROR);
     })
 
