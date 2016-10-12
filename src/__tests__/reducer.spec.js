@@ -187,4 +187,27 @@ describe('reducer', () => {
       expect(get(setup(), 'SAMPLE.error')).to.deep.equal({ error: 'new error' });
     });
   });
+
+  describe('UPDATE_LOCAL handler', () => {
+    const state = {
+      SAMPLE: {
+        data: {
+          key: 'old_value'
+        },
+      }
+    };
+
+    const setup = () => {
+      const api = {
+        name: 'SAMPLE',
+        endpoint: 'http://example.com',
+      };
+      const json = { error: 'new error' };
+      return reducer(state, { type: '@@api/UPDATE_LOCAL', payload: { name: 'SAMPLE', key: 'new_value' } });
+    };
+
+    it('should update local', () => {
+      expect(get(setup(), 'SAMPLE.data.key')).to.equal('new_value');
+    });
+  });
 });
