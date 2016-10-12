@@ -36,11 +36,6 @@
       "/node_modules/",
       "__mocks__",
       "__tests__"
-    ],
-    "collectCoverageFrom": [
-      "**/*.{js}",
-      "!**/node_modules/**",
-      "!**/vendor/**"
     ]
   },
   "main": "index.js",
