@@ -26,9 +26,6 @@ makeFetchAction = (
   isInvalidatedSelector: (state: object) => boolean,
   dataSelector: (state: object) => any,
   errorSelector: (state: object) => any,
-  ...otherSelectors: {
-    [key: string]: (state: object) => any,
-  },
 }
 ```
 
@@ -52,8 +49,6 @@ const {
   isInvalidatedSelector,
   dataSelector,
   errorSelector,
-  latestTodoSelector,
-  incompleteTodosSelector,
 } = makeFetchAction(
   'SAMPLE_API',
   () => ({
@@ -62,12 +57,7 @@ const {
     headers: {
       accept: 'application/json',
     },
-  }),
-  // selectors
-  {
-    latestTodo: data => data.todos[0],
-    incompleteTodos: data => data.todos.filter(todo => !todo.complete),
-  }
+  })
 );
 ```
 
@@ -96,6 +86,8 @@ const store = createStore(rootReducer, {}, middlewares);
 
 // state.js
 import { makeFetchAction } from 'redux-api-call'
+import { createSelector } from 'reselect'
+import { flow, get, filter } from 'lodash/fp'
 
 const {
   actionCreator: fetchTodos,
@@ -105,12 +97,13 @@ const {
   incompleteTodosSelector
 } = makeFetchAction('FETCH_TODOS', () => ({
   endpoint: '/api/v1/todos'
-}, {
-  completeTodos: data => data.todos.filter(todo => todo.complete),
-  incompleteTodos: data => data.todos.filter(todo => !todo.complete),
 })
 
-export { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosSelector, errorSelector }
+export { fetchTodos, isFetchingSelector, errorSelector }
+
+export const todosSelector = flow(dataSelector, get('todos'));
+export const completeTodosSelector = createSelector(todosSelector, filter(todo => todo.complete));
+export const incompleteTodosSelector = createSelector(todosSelector, filter(todo => !todo.complete));
 
 // component.jsx
 import react from 'react'
