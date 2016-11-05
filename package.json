@@ -52,6 +52,7 @@
     "babel-preset-stage-1": "^6.13.0",
     "chai": "^3.5.0",
     "isomorphic-fetch": "^2.2.1",
+    "jest": "^16.0.2",
     "jest-cli": "^16.0.1",
     "lodash": "^4.16.1",
     "redux": "^3.6.0",
