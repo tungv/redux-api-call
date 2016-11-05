@@ -1,256 +1,228 @@
-import { expect } from 'chai';
 import configureStore from 'redux-mock-store';
-import { stub } from 'sinon';
 import timekeeper from 'timekeeper';
-import { CALL_API } from '../constants';
-import { validateApi } from '../validateApi';
+import fetchMock from 'fetch-mock';
 import {
-  makeStartAction,
-  makeStartErrorAction,
-  makeSuccessAction,
-  makeFailureAction,
-} from '../actions';
-
+  CALL_API,
+  ACTION_FETCH_COMPLETE,
+  ACTION_FETCH_FAILURE,
+  ACTION_FETCH_START,
+} from '../constants';
 import middleware from '../middleware';
 
-jest.mock('../validateApi.js');
-jest.mock('../actions.js');
-
-const fakeResponse = (status, json) => Promise.resolve({
-  ok: status < 400,
-  status,
-  json: () => Promise.resolve(json)
-});
+const NOW = 1478329954380;
 
 describe('middleware', () => {
   it('should be a function', () => {
-    expect(middleware).to.be.a.function;
+    expect(middleware).toBeInstanceOf(Function);
   });
 
-  describe('with store', () => {
-    const mockAdapter = stub();
-    const mockStore = configureStore([middleware(mockAdapter)]);
+  afterEach(() => {
+    fetchMock.restore();
+  })
 
-    describe('# when CALL_API is not passed', () => {
-      const store = mockStore({});
-      const actions = [{
-        type: 'ANYTHING',
-        payload: {}
-      }, {
-        type: 'NO_PAYLOAD'
-      }];
+  beforeAll(() => {
+    timekeeper.freeze(NOW);
+  });
 
-      it('should dispatch original actions', () => {
-        actions.forEach(store.dispatch);
-        expect(store.getActions()).eql(actions);
+  afterAll(() => {
+    timekeeper.reset();
+  });
+
+  const getStore = (initialState = {}) => {
+    const mockStore = configureStore([middleware()]);
+    return mockStore(initialState);
+  };
+
+  const takeActionsUntil = ({ subscribe, getActions }, count) => {
+    return new Promise(resolve => {
+      subscribe(() => {
+        const actions = getActions();
+        if (actions.length === count) {
+          resolve(actions);
+        }
+      });
+    });
+  };
+
+  context('dispatching start action', () => {
+    beforeEach(() => {
+      fetchMock.mock('http://localhost:3000/api/test', { everything: 'ok' });
+    });
+
+    it('should dispatch FETCH_START action immediately', () => {
+      const store = getStore();
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+
+      const actions = store.getActions();
+      expect(actions.length === 1);
+      expect(actions[0]).toEqual({
+        type: ACTION_FETCH_START,
+        payload: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+          requestedAt: NOW,
+        },
       });
     });
 
-    describe('# when API config is invalid', () => {
-      let actions;
+    it('should dispatch FETCH_START with config resolved from selectors', () => {
+      const store = getStore({ some: 'state' });
+      const endpointSelector = jest.fn();
+      const headersSelector = jest.fn();
+      const bodySelector = jest.fn();
 
-      beforeAll(() => {
-        const store = mockStore({});
-        validateApi.throws(new Error('failed for some reason'));
-        makeStartErrorAction.returns(error => ({ type: 'START_ERROR', payload: error }));
-
-        store.dispatch({ [CALL_API]: {} });
-        actions = store.getActions();
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: endpointSelector,
+          headers: headersSelector,
+          body: bodySelector,
+        }
       });
 
-      it('should dispatch one action created by makeStartErrorAction', () => {
-        expect(actions).to.have.length(1);
-        const { payload } = actions[0];
-        expect(payload).to.be.an.instanceOf(Error);
-        expect(payload).to.have.property('message', 'failed for some reason');
-      });
+      expect(endpointSelector).toBeCalledWith({ some: 'state' });
+      expect(headersSelector).toBeCalledWith({ some: 'state' });
+      expect(bodySelector).toBeCalledWith({ some: 'state' });
     });
 
-    describe('# when API config is valid and API response is ok', () => {
-      let actions;
-
-      beforeAll(() => {
-        timekeeper.freeze(Date.now());
+    it('should dispatch FETCH_START with error=true when name is not a string', () => {
+      const store = getStore();
+      store.dispatch({
+        [CALL_API]: {
+          name: {},
+          endpoint: 'http://localhost:3000/api/test',
+        }
       });
 
-      afterAll(() => {
-        timekeeper.reset();
-      });
-
-      beforeAll(done => {
-        const store = mockStore({});
-        const action = {
-          [CALL_API]: {
-            name: 'USERS',
-            endpoint: 'http://localhost:9000/api/users',
-          },
-        };
-
-        // validation ok
-        validateApi.returns(true);
-        makeStartAction.returns(() => ({ type: 'START' }))
-        makeSuccessAction.returns(json => ({
-          type: 'SUCCESS',
-          payload: json,
-        }));
-        mockAdapter.returns(fakeResponse(200, { key: 'value' }));
-
-        store.dispatch(action).then(() => {
-          actions = store.getActions();
-          done();
-        });
-      });
-
-      it('should dispatch two actions', () => {
-        expect(actions).to.have.length(2);
-      });
-
-      it('should dispatch START action first', () => {
-        expect(actions[0]).to.have.property('type', 'START');
-      });
-
-      it('should dispatch SUCCESS action afterward', () => {
-        expect(actions[1]).to.have.property('type', 'SUCCESS');
-      });
-
-      it('should dispatch SUCCESS action with json response in payload', () => {
-        expect(actions[1].payload).to.have.property('key', 'value');
-      });
+      expect(store.getActions()[0].error).toBeTruthy();
     });
 
-    describe('# when API config is valid but API response is not ok', () => {
-      let actions;
-
-      beforeAll(() => {
-        timekeeper.freeze(Date.now());
+    xit('should dispatch FETCH_START with error=true when name is an empty string', () => {
+      const store = getStore();
+      store.dispatch({
+        [CALL_API]: {
+          name: '',
+          endpoint: 'http://localhost:3000/api/test',
+        }
       });
 
-      afterAll(() => {
-        timekeeper.reset();
-      });
-
-      beforeAll(done => {
-        const store = mockStore({});
-        const action = {
-          [CALL_API]: {
-            name: 'USERS',
-            endpoint: 'http://localhost:9000/api/users',
-          },
-        };
-
-        // validation not ok
-        validateApi.returns(true);
-        makeStartAction.returns(() => ({ type: 'START' }))
-        makeFailureAction.returns(json => ({
-          type: 'FAILURE',
-          payload: json,
-        }));
-        mockAdapter.returns(fakeResponse(400, { error: 'value' }));
-
-        store.dispatch(action).then(() => {
-          actions = store.getActions();
-          done();
-        });
-      });
-
-      it('should dispatch two actions', () => {
-        expect(actions).to.have.length(2);
-      });
-
-      it('should dispatch START action first', () => {
-        expect(actions[0]).to.have.property('type', 'START');
-      });
-
-      it('should dispatch FAILURE action afterward', () => {
-        expect(actions[1]).to.have.property('type', 'FAILURE');
-      });
-
-      it('should dispatch FAILURE action with json response in payload', () => {
-        expect(actions[1].payload).to.have.property('error', 'value');
-      });
+      expect(store.getActions()[0].error).toBeTruthy();
     });
 
-    describe('# when API config is a function', () => {
-      let actions;
-      const initialState = { path: 'from-state' };
-
-      beforeAll(done => {
-        const store = mockStore(initialState);
-
-        // validation ok
-        validateApi.returns(true);
-        makeStartAction.returns(() => ({ type: 'START' }))
-        makeSuccessAction.returns(json => ({
-          type: 'SUCCESS',
-          payload: json,
-        }));
-        mockAdapter.returns(fakeResponse(200, { key: 'value' }));
-
-        const action = {
-          [CALL_API]: ({
-            endpoint: state => `http://localhost/${state.path}`
-          })
-        };
-
-        store.dispatch(action).then(() => {
-          actions = store.getActions();
-          done();
-        });
+    it('should dispatch FETCH_START with error=true when endpoint is not a string or a function', () => {
+      const store = getStore();
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: {},
+        }
       });
 
-      it('should dispatch 2 actions', () => {
-        expect(actions).to.have.length(2);
-      });
-
-      it('should dispatch START action first', () => {
-        expect(actions[0]).to.have.property('type', 'START')
-      });
-
-      it('should get data from state', () => {
-        expect(makeStartAction.lastCall.args[0]).to.eql({ endpoint: 'http://localhost/from-state' });
-      });
-
-      it('should dispatch SUCCESS action afterward', () => {
-        expect(actions[1]).to.have.property('type', 'SUCCESS')
-      });
+      expect(store.getActions()[0].error).toBeTruthy();
     });
+  })
 
-    describe('# when API config is a function that throw', () => {
-      let actions;
-      const initialState = { shouldThrow: true };
+  context('dispatching complete action', () => {
+    it('should dispatch FETCH_COMPLETE with a json object', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', { everything: 'ok' });
 
-      beforeAll(() => {
-        const store = mockStore(initialState);
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
 
-        // validation ok
-        validateApi.returns(true);
-        makeStartErrorAction.returns(() => ({ type: 'START_ERROR' }))
-        makeSuccessAction.returns(json => ({
-          type: 'SUCCESS',
-          payload: json,
-        }));
-        mockAdapter.returns(fakeResponse(200, { key: 'value' }));
+      const [_, complete] = await takeActionsUntil(store, 2);
 
-        const action = {
-          [CALL_API]: {
-            endpoint: state => {
-              if (state.shouldThrow) {
-                throw new Error
-              }
-            }
+      expect(complete).toEqual({
+        type: ACTION_FETCH_COMPLETE,
+        payload: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          json: {
+            everything: 'ok'
           }
-        };
+        },
+      });
+    });
 
-        store.dispatch(action);
-        actions = store.getActions();
+    xit('should dispatch FETCH_COMPLETE with a text object', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', { body: 'string' });
+
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+        }
       });
 
-      it('should dispatch 1 action', () => {
-        expect(actions).to.have.length(1);
+      const [_, complete] = await takeActionsUntil(store, 2);
+
+      expect(complete).toEqual({
+        type: ACTION_FETCH_COMPLETE,
+        payload: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          text: 'string',
+        },
+      });
+    });
+  });
+
+  context('dispatching failure action', () => {
+    it('should dispatch FETCH_FAILURE with a json object', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: { msg: 'ERRRRR!' }});
+      store.dispatch({
+        [CALL_API]: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+        }
       });
 
-      it('should dispatch START action with error', () => {
-        expect(actions[0]).to.have.property('type', 'START_ERROR')
+      const [_, failure] = await takeActionsUntil(store, 2);
+      expect(failure).toEqual({
+        type: ACTION_FETCH_FAILURE,
+        payload: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          json: {
+            msg: 'ERRRRR!',
+          }
+        },
+      })
+    });
+
+    xit('should dispatch FETCH_FAILURE with a error object', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: 'just a message' });
+      store.dispatch({
+        [CALL_API]: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+
+      const [_, failure] = await takeActionsUntil(store, 2);
+      expect(failure).toEqual({
+        type: ACTION_FETCH_FAILURE,
+        payload: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          error: 'just a message',
+        },
       });
     });
   });

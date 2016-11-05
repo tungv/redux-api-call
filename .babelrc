@@ -1,3 +1,4 @@
 {
-  "presets": ["stage-1", "es2015", "es2016"]
+  "presets": ["stage-1", "es2015", "es2016"],
+  "plugins": ["transform-function-bind", "transform-runtime"]
 }
