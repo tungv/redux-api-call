@@ -1,48 +1,20 @@
-import { CALL_API } from './constants';
-import { validateApi } from './validateApi.js';
+import { Subject } from 'rxjs/Subject';
 import defaultAdapter from './defaultAdapter'
-import {
-  makeStartAction,
-  makeStartErrorAction,
-  makeSuccessAction,
-  makeFailureAction,
-} from './actions'
+import createActionStream from './createActionStream'
+import { CALL_API } from './constants';
 
-export default (adapter = defaultAdapter) => ({ dispatch, getState }) => next => action => {
-  if (!action || !action[CALL_API]) {
-    next(action);
-    return;
-  }
+// middleware
+export default (adapter = defaultAdapter) => ({ dispatch, getState }) => {
+  const apiCallsAction$ = new Subject();
 
-  const api = action[CALL_API];
+  createActionStream(apiCallsAction$, { getState }, adapter).subscribe(dispatch);
 
-  try {
+  return next => action => {
+    if (!action[CALL_API]) {
+      next(action);
+      return;
+    }
 
-    const finalApi = Object.keys(api).reduce((obj, key) => ({
-      ...obj,
-      [key]: typeof api[key] === 'function' ? api[key](getState()) : api[key],
-    }), {});
-
-    validateApi(finalApi);
-
-    dispatch(makeStartAction(finalApi)());
-
-    // sending request
-    return new Promise((resolve, reject) => {
-      const responsePromise = adapter(finalApi);
-
-      responsePromise.then(resp => {
-        if (resp.ok) {
-          return resp.json().then(makeSuccessAction(finalApi));
-        }
-
-        return resp.json().then(makeFailureAction(finalApi));
-      })
-      .then(dispatch)
-      .then(resolve);
-    });
-  } catch (error) {
-    dispatch(makeStartErrorAction(api)(error));
-    return;
-  }
+    apiCallsAction$.next(action);
+  };
 }
