@@ -127,6 +127,80 @@ describe('middleware', () => {
     });
   })
 
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  context('mutiple api calls', () => {
+    it('should not drop pending request when there is a new one', async () => {
+      const store = getStore();
+
+      fetchMock.mock(
+        'http://localhost:3000/api/test/1',
+        delay(30).then(() => ({ body: { timer: '30' }}))
+      );
+      fetchMock.mock(
+        'http://localhost:3000/api/test/2',
+        delay(10).then(() => ({ body: { timer: '10' }}))
+      );
+
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API_30',
+          endpoint: 'http://localhost:3000/api/test/1',
+        }
+      });
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API_10',
+          endpoint: 'http://localhost:3000/api/test/2',
+        }
+      });
+
+      const [start30, start10, complete10, complete30] = await takeActionsUntil(store, 4);
+
+      expect(start30.type).toBe(ACTION_FETCH_START);
+      expect(start10.type).toBe(ACTION_FETCH_START);
+
+      expect(complete10.type).toBe(ACTION_FETCH_COMPLETE);
+      expect(complete30.type).toBe(ACTION_FETCH_COMPLETE);
+
+      expect(complete10.payload.json).toEqual({ timer: '10' });
+      expect(complete30.payload.json).toEqual({ timer: '30' });
+    });
+
+    it('should drop pending request when there is a new one', async () => {
+      const store = getStore();
+
+      fetchMock.mock(
+        'http://localhost:3000/api/test/1',
+        delay(30).then(() => ({ body: { timer: '30' }}))
+      );
+      fetchMock.mock(
+        'http://localhost:3000/api/test/2',
+        delay(10).then(() => ({ body: { timer: '10' }}))
+      );
+
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test/1',
+        }
+      });
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test/2',
+        }
+      });
+
+      const [start30, start10, complete10] = await takeActionsUntil(store, 3);
+
+      expect(start30.type).toBe(ACTION_FETCH_START);
+      expect(start10.type).toBe(ACTION_FETCH_START);
+      expect(complete10.type).toBe(ACTION_FETCH_COMPLETE);
+      expect(complete10.payload.json).toEqual({ timer: '10' });
+    });
+  });
+
   context('dispatching complete action', () => {
     it('should dispatch FETCH_COMPLETE with a json object', async () => {
       const store = getStore();
