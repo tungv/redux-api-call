@@ -192,7 +192,10 @@ describe('middleware', () => {
         }
       });
 
-      const [start30, start10, complete10] = await takeActionsUntil(store, 3);
+      await delay(50);
+      const actions = store.getActions();
+      expect(actions.length).toBe(3);
+      const [start30, start10, complete10] = actions;
 
       expect(start30.type).toBe(ACTION_FETCH_START);
       expect(start10.type).toBe(ACTION_FETCH_START);
