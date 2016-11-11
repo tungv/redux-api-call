@@ -1,6 +1,7 @@
 import { merge } from 'rxjs/observable/merge';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { map } from 'rxjs/operator/map';
+import { switchMap } from 'rxjs/operator/switchMap';
 import { filter } from 'rxjs/operator/filter';
 import { partition } from 'rxjs/operator/partition';
 import { groupBy } from 'rxjs/operator/groupBy';
@@ -28,7 +29,7 @@ const fromRespToActionStream = (actionCreator) => ({ api, resp }) => fromPromise
 )
 
 // create an observable of promises
-const callApiInGroup = (group$, adapter) => group$::map(
+const callApiInGroup = (group$, adapter) => group$::switchMap(
   api => fromPromise(adapter(api).then(resp => ({ resp, api })))
 )
 
@@ -48,7 +49,7 @@ export default (actions$, { getState }, adapter) => {
   // create a higher-order observable of outgoing requests streams
   // each item is an observable
   const resp$ = apiGroup$::mergeMap(
-    apiInGroup$ => callApiInGroup(apiInGroup$, adapter)::mergeAll()
+    apiInGroup$ => callApiInGroup(apiInGroup$, adapter)
   )
 
   const [success$, failure$] = resp$::partition(({ resp }) => resp.ok)
