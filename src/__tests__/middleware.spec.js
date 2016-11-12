@@ -35,12 +35,17 @@ describe('middleware', () => {
 
   const takeActionsUntil = ({ subscribe, getActions }, count) => {
     return new Promise(resolve => {
-      subscribe(() => {
+      const checkIfEnoughActions = () => {
         const actions = getActions();
-        if (actions.length === count) {
+        if (actions.length >= count) {
           resolve(actions);
         }
-      });
+      }
+
+      // there may be enough actions
+      checkIfEnoughActions();
+
+      subscribe(checkIfEnoughActions);
     });
   };
 
@@ -191,6 +196,9 @@ describe('middleware', () => {
           endpoint: 'http://localhost:3000/api/test/2',
         }
       });
+
+      // delay to make sure that both requests 'may' succeed
+      await delay(100);
 
       const [start30, start10, complete10] = await takeActionsUntil(store, 3);
 
