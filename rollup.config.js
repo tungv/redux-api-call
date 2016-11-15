@@ -11,7 +11,7 @@ export default {
     babel({
       babelrc: false,
       presets: ['stage-1', ['es2015', { modules: false }], 'es2016'],
-      plugins: ['external-helpers']
+      plugins: ['external-helpers', 'transform-function-bind']
     }),
     cleanup({ maxEmptyLines: 1 }),
   ]
