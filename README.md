@@ -5,7 +5,7 @@ Redux utilities for API calls using fetch
 
 # Installation
 ```
-npm i -S redux-api-call
+npm i -S redux-api-call rxjs redux
 ```
 
 # The goals
