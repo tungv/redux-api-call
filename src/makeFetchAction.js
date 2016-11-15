@@ -1,5 +1,4 @@
 import get from './utils/get';
-import assertTypes from './utils/assertTypes'
 import { CALL_API, REDUCER_PATH, ACTION_UPDATE_LOCAL } from './constants';
 
 export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
