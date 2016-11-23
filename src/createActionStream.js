@@ -9,6 +9,8 @@ import { mergeMap } from 'rxjs/operator/mergeMap';
 import { mergeAll } from 'rxjs/operator/mergeAll';
 import 'rxjs/add/operator/do';
 
+const identity = (val) => val; 
+
 import { CALL_API } from './constants';
 
 import {
@@ -24,14 +26,19 @@ const isValid = (api) =>
   typeof api.name === 'string' &&
   typeof api.endpoint === 'string';
 
-const fromRespToActionStream = (actionCreator) => ({ api, resp }) => fromPromise(
-  resp.json().then(json => actionCreator(api)(json))
+const fromRespToActionStream = (actionCreator) => ({ api, resp, error }) => fromPromise(
+  error ?
+    Promise.resolve(actionCreator(api)({ error })) :
+    resp.json().then(json => actionCreator(api)(json))
 )
 
 // create an observable of promises
 const callApiInGroup = (group$, adapter) => group$::switchMap(
-  api => fromPromise(adapter(api).then(resp => ({ resp, api })))
-)
+  api => fromPromise(adapter(api).then(
+    resp => ({ resp, api }), 
+    error => ({ error, api })
+  ))
+);
 
 export default (actions$, { getState }, adapter) => {
   const api$ = actions$
@@ -48,11 +55,9 @@ export default (actions$, { getState }, adapter) => {
 
   // create a higher-order observable of outgoing requests streams
   // each item is an observable
-  const resp$ = apiGroup$::mergeMap(
-    apiInGroup$ => callApiInGroup(apiInGroup$, adapter)
-  )
+  const resp$ = apiGroup$::mergeMap(apiInGroup$ => callApiInGroup(apiInGroup$, adapter));
 
-  const [success$, failure$] = resp$::partition(({ resp }) => resp.ok)
+  const [success$, failure$] = resp$::partition(({ resp }) => resp && resp.ok);
 
   const successAction$ = success$::mergeMap(fromRespToActionStream(makeSuccessAction))
   const failureAction$ = failure$::mergeMap(fromRespToActionStream(makeFailureAction))

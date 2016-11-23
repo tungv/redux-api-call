@@ -44,6 +44,27 @@ describe('middleware', () => {
     });
   };
 
+  context('rejected fetch requests', () => {
+    beforeEach(() => {
+      fetchMock.mock('http://localhost:3000/api/test', {
+        throws: new Error('timeout')
+      });
+    });
+
+    it('should dispatch FETCH_FAILURE', async () => {
+      const store = getStore();
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+
+      const actions = await takeActionsUntil(store, 2);
+      expect(actions[1].type).toEqual(ACTION_FETCH_FAILURE);
+    });
+  })
+
   context('dispatching start action', () => {
     beforeEach(() => {
       fetchMock.mock('http://localhost:3000/api/test', { everything: 'ok' });
