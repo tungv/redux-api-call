@@ -62,7 +62,7 @@ export default (actions$, { getState }, adapter) => {
   // each item is an observable
   const resp$ = apiGroup$::mergeMap(apiInGroup$ => callApiInGroup(apiInGroup$, adapter));
 
-  const actions1$ = resp$.mergeMap(fromRespToActionStream);
+  const fetchDoneActions$ = resp$.mergeMap(fromRespToActionStream);
 
-  return merge(start$, startError$, actions1$);
+  return merge(start$, startError$, fetchDoneActions$);
 }
