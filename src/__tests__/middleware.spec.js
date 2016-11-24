@@ -8,6 +8,10 @@ import {
   ACTION_FETCH_START,
 } from '../constants';
 import middleware from '../middleware';
+import {
+  Observable
+} from 'rxjs';
+import { map } from 'rxjs/operator/map';
 
 const NOW = 1478329954380;
 
@@ -228,7 +232,11 @@ describe('middleware', () => {
   context('dispatching complete action', () => {
     it('should dispatch FETCH_COMPLETE with a json object', async () => {
       const store = getStore();
-      fetchMock.mock('http://localhost:3000/api/test', { everything: 'ok' });
+      const mockSpy = jest.fn();
+      fetchMock.mock('http://localhost:3000/api/test', () => {
+        mockSpy();
+        return ({ everything: 'ok' });
+      });
 
       store.dispatch({
         [CALL_API]: {
@@ -238,6 +246,7 @@ describe('middleware', () => {
       });
 
       const [_, complete] = await takeActionsUntil(store, 2);
+      expect(mockSpy).toHaveBeenCalledTimes(1);
 
       expect(complete).toEqual({
         type: ACTION_FETCH_COMPLETE,
