@@ -6,10 +6,8 @@ import { filter } from 'rxjs/operator/filter';
 import { partition } from 'rxjs/operator/partition';
 import { groupBy } from 'rxjs/operator/groupBy';
 import { mergeMap } from 'rxjs/operator/mergeMap';
-import { mergeAll } from 'rxjs/operator/mergeAll';
-import 'rxjs/add/operator/do';
 
-const identity = (val) => val; 
+const identity = (val) => val;
 
 import { CALL_API } from './constants';
 
@@ -26,16 +24,23 @@ const isValid = (api) =>
   typeof api.name === 'string' &&
   typeof api.endpoint === 'string';
 
-const fromRespToActionStream = (actionCreator) => ({ api, resp, error }) => fromPromise(
+const makeHOObservableFromActionCreator = (actionCreator) => ({ api, resp, error }) => fromPromise(
   error ?
     Promise.resolve(actionCreator(api)({ error })) :
     resp.json().then(json => actionCreator(api)(json))
-)
+);
+
+const fromRespToSuccessActionStream = makeHOObservableFromActionCreator(makeSuccessAction);
+const fromRespToFailureActionStream = makeHOObservableFromActionCreator(makeFailureAction);
+const fromRespToActionStream = (data) =>
+  data.resp && data.resp.ok ?
+    fromRespToSuccessActionStream(data) :
+    fromRespToFailureActionStream(data);
 
 // create an observable of promises
 const callApiInGroup = (group$, adapter) => group$::switchMap(
   api => fromPromise(adapter(api).then(
-    resp => ({ resp, api }), 
+    resp => ({ resp, api }),
     error => ({ error, api })
   ))
 );
@@ -57,10 +62,7 @@ export default (actions$, { getState }, adapter) => {
   // each item is an observable
   const resp$ = apiGroup$::mergeMap(apiInGroup$ => callApiInGroup(apiInGroup$, adapter));
 
-  const [success$, failure$] = resp$::partition(({ resp }) => resp && resp.ok);
+  const fetchDoneActions$ = resp$.mergeMap(fromRespToActionStream);
 
-  const successAction$ = success$::mergeMap(fromRespToActionStream(makeSuccessAction))
-  const failureAction$ = failure$::mergeMap(fromRespToActionStream(makeFailureAction))
-
-  return merge(start$, startError$, successAction$, failureAction$);
+  return merge(start$, startError$, fetchDoneActions$);
 }
