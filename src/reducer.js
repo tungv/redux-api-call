@@ -27,7 +27,7 @@ const reducer = handleActions({
       lastRequest: getRequestedAt(action),
       isFetching: !action.error,
       isInvalidated: true,
-      error: action.error ? getError(action) : null,
+      error: action.error ? getError(action) : state[getName(action)].error,
     }),
   [ACTION_FETCH_COMPLETE]: (state, action) => updateWith(
     state,
