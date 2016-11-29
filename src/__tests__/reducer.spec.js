@@ -54,8 +54,8 @@ describe('reducer', () => {
       expect(get(setup(), 'SAMPLE.data')).to.equal(state.SAMPLE.data);
     });
 
-    it('should set error to null', () => {
-      expect(get(setup(), 'SAMPLE.error')).to.equal(null);
+    it('should keep previous data as is (referential transparent)', () => {
+      expect(get(setup(), 'SAMPLE.error')).to.equal(state.SAMPLE.error);
     });
   });
 
