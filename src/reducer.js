@@ -11,6 +11,7 @@ const getRequestedAt = action => action.payload.requestedAt;
 const getRespondedAt = action => action.payload.respondedAt;
 const getJSONResponse = action => action.payload.json;
 const getError = action => action.payload.error;
+const getPreviousError = (state, action) => state[getName(action)] ? state[getName(action)].error : null;
 
 const updateWith = (state, name, obj) => ({
   ...state,
@@ -27,7 +28,7 @@ const reducer = handleActions({
       lastRequest: getRequestedAt(action),
       isFetching: !action.error,
       isInvalidated: true,
-      error: action.error ? getError(action) : state[getName(action)].error,
+      error: action.error ? getError(action) : getPreviousError(state, action),
     }),
   [ACTION_FETCH_COMPLETE]: (state, action) => updateWith(
     state,
