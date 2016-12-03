@@ -2,7 +2,8 @@
 
 # redux-api-call
 Redux utilities for API calls using fetch
-[Detailed API Reference](https://github.com/tungv/redux-api-call/wiki/API-Reference)
+
+[**Detailed API Reference**](https://github.com/tungv/redux-api-call/wiki/API-Reference)
 
 # Installation
 ```
