@@ -31,6 +31,15 @@ store.dispatch(actionCreator({ page: 1, limit: 10 });
 
 // get the data
 const todos = dataSelector(store.getState());
+
+// EXAMPLE 2
+// race-condition elimination:
+// if those commands are called in sequence
+// no matter how long each request takes,
+// page 2 and page 3 data will not have a chance to override page 4 data.
+store.dispatch(actionCreator({ page: 2 });
+store.dispatch(actionCreator({ page: 3 });
+store.dispatch(actionCreator({ page: 4 });
 ```
 
 # Usages
