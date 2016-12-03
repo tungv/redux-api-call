@@ -2,6 +2,7 @@
 
 # redux-api-call
 Redux utilities for API calls using fetch
+[Detailed API Reference](https://github.com/tungv/redux-api-call/wiki/API-Reference)
 
 # Installation
 ```
@@ -11,58 +12,28 @@ npm i -S redux-api-call rxjs redux
 # The goals
 One command to create reducers, action creators and selectors for JSON API calls
 
-# Interface
-
-[Detailed API Reference](https://github.com/tungv/redux-api-call/wiki/API-Reference)
+# Examples
 
 ```js
-makeFetchAction = (
-  apiName: string,
-  endpointFactory: (args: any) => ReduxStandardAPICallingAction,
-  selectors: ?SelectorDescriptor,
-) => {
-  actionCreator: (args: any) => FluxStandardAction,
-  isFetchingSelector: (state: object) => boolean,
-  isInvalidatedSelector: (state: object) => boolean,
-  dataSelector: (state: object) => any,
-  errorSelector: (state: object) => any,
-}
-```
-
-Where
-
-`ReduxStandardAPICallingAction` is heavily influenced by [`redux-api-middleware`](https://github.com/agraboso/redux-api-middleware#redux-standard-api-calling-actions)
-
-`FluxStandardAction` can be found [here](https://github.com/acdlite/flux-standard-action)
-
-```js
-type SelectorDescriptor = {
-  [selectorName: string]: (apiResponseBody: any, apiErrorResponse: any) => any
-}
-```
-
-## Examples:
-```js
-const {
-  actionCreator,
-  isFetchingSelector,
-  isInvalidatedSelector,
-  dataSelector,
-  errorSelector,
-} = makeFetchAction(
-  'SAMPLE_API',
-  () => ({
-    endpoint: '/api/v1/todos',
+// EXAMPLE 1
+// this will create data selector and action creator for your components to use
+const { dataSelector, actionCreator } = makeFetchAction(
+  'TODO_LIST',
+  ({ page, limit }) => ({
+    endpoint: `/api/v1/todos?page=${page}&limit=${limit}`,
     method: 'GET',
-    headers: {
-      accept: 'application/json',
-    },
   })
 );
+
+// trigger fetch action
+store.dispatch(actionCreator({ page: 1, limit: 10 });
+
+// get the data
+const todos = dataSelector(store.getState());
 ```
 
 # Usages
-First you need to add a reducer to your root reducer with a pathname is `api_responses` (In next releases, this name should be configurable, but for now, just use it)
+First you need to add a reducer to your root reducer with a pathname is `api_calls` (In next releases, this name should be configurable, but for now, just use it)
 
 ```js
 
@@ -105,6 +76,7 @@ export const todosSelector = flow(dataSelector, get('todos'));
 export const completeTodosSelector = createSelector(todosSelector, filter(todo => todo.complete));
 export const incompleteTodosSelector = createSelector(todosSelector, filter(todo => !todo.complete));
 
+// example usage with react
 // component.jsx
 import react from 'react'
 import { connect } from 'react-redux'
