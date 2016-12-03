@@ -1,7 +1,7 @@
 [![CircleCI](https://circleci.com/gh/tungv/redux-api-call.svg?style=svg)](https://circleci.com/gh/tungv/redux-api-call)
 
 # redux-api-call
-Redux utilities for API calls using fetch
+Redux utilities for API calls using fetch with automatic race-conditions elimination.
 
 [**Detailed API Reference**](https://github.com/tungv/redux-api-call/wiki/API-Reference)
 
