@@ -73,6 +73,7 @@ import { flow, get, filter } from 'lodash/fp'
 const {
   actionCreator: fetchTodos,
   isFetchingSelector,
+  lastResponseSelector,
   errorSelector,
   completeTodosSelector,
   incompleteTodosSelector
@@ -80,7 +81,7 @@ const {
   endpoint: '/api/v1/todos'
 })
 
-export { fetchTodos, isFetchingSelector, errorSelector }
+export { fetchTodos, isFetchingSelector, errorSelector, lastResponseSelector }
 
 export const todosSelector = flow(dataSelector, get('todos'));
 export const completeTodosSelector = createSelector(todosSelector, filter(todo => todo.complete));
@@ -90,7 +91,7 @@ export const incompleteTodosSelector = createSelector(todosSelector, filter(todo
 // component.jsx
 import react from 'react'
 import { connect } from 'react-redux'
-import { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosSelector, errorSelector } from './state'
+import { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosSelector, errorSelector, lastResponseSelector } from './state'
 
 @connect(
   state => ({
@@ -98,6 +99,7 @@ import { fetchTodos, isFetchingSelector, completeTodosSelector, incompleteTodosS
     error: errorSelector(state),
     completeTodos: completeTodosSelector(state),
     incompleteTodos: incompleteTodosSelector(state),
+    lastResponse: lastResponseSelector(state),
   }), {
     fetchTodos,
   }

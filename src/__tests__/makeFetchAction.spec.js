@@ -29,6 +29,10 @@ describe('makeFetchAction', () => {
       expect(actual).to.have.property('errorSelector').to.be.an.instanceOf(Function);
     });
 
+    it('should return lastResponseSelector function', () => {
+      expect(actual).to.have.property('lastResponseSelector').to.be.an.instanceOf(Function);
+    });
+
     it('should return isInvalidatedSelector function', () => {
       expect(actual).to.have.property('isInvalidatedSelector').to.be.an.instanceOf(Function);
     });
@@ -113,6 +117,23 @@ describe('makeFetchAction', () => {
 
         it('should return null if api was not called', () => {
           expect(actual.errorSelector({})).to.equal(null);
+        });
+      });
+
+      describe('lastResponseSelector', () => {
+        it('should return lastResponse in state if present', () => {
+          const lastResponse = 12345;
+          expect(actual.lastResponseSelector({
+            api_calls: {
+              SAMPLE: {
+                lastResponse: 12345
+              }
+            }
+          })).to.equal(lastResponse);
+        });
+
+        it('should return null if api was not called', () => {
+          expect(actual.lastResponseSelector({})).to.equal(null);
         });
       });
     });

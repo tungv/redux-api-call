@@ -21,6 +21,7 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   const isInvalidatedSelector = get([REDUCER_PATH, apiName, 'isInvalidated'], false);
   const dataSelector = get([REDUCER_PATH, apiName, 'data'], null);
   const errorSelector = get([REDUCER_PATH, apiName, 'error'], null);
+  const lastResponseSelector = get([REDUCER_PATH, apiName, 'lastResponse'], null);
 
   return {
     actionCreator,
@@ -29,5 +30,6 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     isInvalidatedSelector,
     dataSelector,
     errorSelector,
+    lastResponseSelector,
   };
 };
