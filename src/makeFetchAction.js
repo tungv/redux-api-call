@@ -1,5 +1,28 @@
 import get from './utils/get';
-import { CALL_API, REDUCER_PATH, ACTION_UPDATE_LOCAL } from './constants';
+import {
+  CALL_API,
+  REDUCER_PATH,
+  ACTION_UPDATE_LOCAL,
+  ACTION_RESET_LOCAL,
+} from './constants';
+
+const normalizeResetData = data => {
+  const defaultData = [
+    'lastRequest',
+    'isFetching',
+    'isInvalidated',
+    'lastResponse',
+    'data',
+    'error',
+  ];
+  if (data === undefined) {
+    return defaultData;
+  }
+  if (typeof data === 'string') {
+    return [data];
+  }
+  return data;
+}
 
 export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   const actionCreator = (...params) => ({
@@ -17,6 +40,14 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     },
   });
 
+  const resetter = data => ({
+    type: ACTION_RESET_LOCAL,
+    payload: {
+      name: apiName,
+      data: normalizeResetData(data)
+    },
+  });
+
   const isFetchingSelector = get([REDUCER_PATH, apiName, 'isFetching'], false);
   const isInvalidatedSelector = get([REDUCER_PATH, apiName, 'isInvalidated'], false);
   const dataSelector = get([REDUCER_PATH, apiName, 'data'], null);
@@ -31,5 +62,6 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     dataSelector,
     errorSelector,
     lastResponseSelector,
+    resetter,
   };
 };

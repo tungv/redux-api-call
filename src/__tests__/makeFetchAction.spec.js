@@ -37,6 +37,60 @@ describe('makeFetchAction', () => {
       expect(actual).to.have.property('isInvalidatedSelector').to.be.an.instanceOf(Function);
     });
 
+    describe('resetter', () => {
+      it('should return array of all field if no param', () => {
+        const resetter = actual.resetter;
+        const actualValue = resetter();
+        const expectedValue = {
+          type: '@@api/RESET_LOCAL',
+          payload: {
+            name: 'SAMPLE',
+            data: [
+              'lastRequest',
+              'isFetching',
+              'isInvalidated',
+              'lastResponse',
+              'data',
+              'error',
+            ],
+          },
+        }
+        expect(actualValue).to.deep.equal(expectedValue);
+      });
+
+      it('should return array of 1 string if param is string', () => {
+        const resetter = actual.resetter;
+        const actualValue = resetter('lastResponse');
+        const expectedValue = {
+          type: '@@api/RESET_LOCAL',
+          payload: {
+            name: 'SAMPLE',
+            data: [
+              'lastResponse',
+            ],
+          },
+        }
+        expect(actualValue).to.deep.equal(expectedValue);
+      });
+
+      it('should return array of multiple fields if param is array', () => {
+        const resetter = actual.resetter;
+        const actualValue = resetter(['lastResponse', 'error']);
+        const expectedValue = {
+          type: '@@api/RESET_LOCAL',
+          payload: {
+            name: 'SAMPLE',
+            data: [
+              'lastResponse',
+              'error',
+            ],
+          },
+        }
+        expect(actualValue).to.deep.equal(expectedValue);
+      });
+
+    });
+
     describe('selectors', () => {
       describe('isFetchingSelector', () => {
         it('should return isFetching in state if present', () => {
@@ -136,6 +190,7 @@ describe('makeFetchAction', () => {
           expect(actual.lastResponseSelector({})).to.equal(null);
         });
       });
+
     });
   });
 });

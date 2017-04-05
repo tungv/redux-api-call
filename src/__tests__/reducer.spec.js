@@ -210,4 +210,93 @@ describe('reducer', () => {
       expect(get(setup(), 'SAMPLE.data.key')).to.equal('new_value');
     });
   });
+
+  describe('ACTION_RESET_LOCAL handler', () => {
+    const state = {
+      SAMPLE: {
+        lastResponse: 'lastResponse',
+        lastRequest: 'lastRequest',
+        isInvalidated: 'isInvalidated',
+        isFetching: 'isFetching',
+        error: 'error',
+        data: {
+          key: 'old_value'
+        },
+      }
+    };
+
+    const setup = (data) => {
+      const api = {
+        name: 'SAMPLE',
+        endpoint: 'http://example.com',
+      };
+      const json = { error: 'new error' };
+      return reducer(state, { type: '@@api/RESET_LOCAL', payload: { name: 'SAMPLE', data: data } });
+    };
+
+    it('should update local with array of fields', () => {
+      const actual = setup(['lastResponse']);
+      const expected = {
+        SAMPLE: {
+          ...state.SAMPLE,
+          lastResponse: undefined,
+        }
+      };
+
+      console.log(actual);
+      expect(actual).to.deep.equal(expected);
+    });
+
+    it('should update local with array of 2 fields', () => {
+      const actual = setup(['lastResponse', 'error']);
+      const expected = {
+        SAMPLE: {
+          ...state.SAMPLE,
+          lastResponse: undefined,
+          error: undefined,
+        }
+      };
+      console.log(actual);
+      expect(actual).to.deep.equal(expected);
+    });
+
+    it('should update local with array of 2 fields and 1 invalid field', () => {
+      const actual = setup(['lastResponse', 'error', 'invalid']);
+      const expected = {
+        SAMPLE: {
+          ...state.SAMPLE,
+          lastResponse: undefined,
+          error: undefined,
+        }
+      };
+      console.log(actual);
+      expect(actual).to.deep.equal(expected);
+    });
+
+    it('should update local with array of all fields', () => {
+      const actual = setup(
+        [
+          'lastRequest',
+          'isFetching',
+          'isInvalidated',
+          'lastResponse',
+          'data',
+          'error',
+        ]
+      );
+      const expected = {
+        SAMPLE: {
+          lastRequest: undefined,
+          isFetching: undefined,
+          isInvalidated: undefined,
+          lastResponse: undefined,
+          data: undefined,
+          error: undefined,
+        },
+      };
+      console.log(actual);
+      expect(actual).to.deep.equal(expected);
+    });
+
+  });
 });
