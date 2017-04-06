@@ -6,20 +6,20 @@ import {
   ACTION_RESET_LOCAL,
 } from './constants';
 
-const normalizeResetData = data => {
-  const defaultData = [
-    'lastRequest',
-    'isFetching',
-    'isInvalidated',
-    'lastResponse',
-    'data',
-    'error',
-  ];
-  if (data === undefined) {
-    return defaultData;
-  }
+const normalizeResetData = (data = [
+  'lastRequest',
+  'isFetching',
+  'isInvalidated',
+  'lastResponse',
+  'data',
+  'error',
+]) => {
   if (typeof data === 'string') {
     return [data];
+  }
+  if (!Array.isArray(data)) {
+    console.warn('You are using resetter wrong, the params should be string, array or undefined');
+    return [];
   }
   return data;
 }

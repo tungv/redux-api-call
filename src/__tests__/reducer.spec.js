@@ -294,7 +294,6 @@ describe('reducer', () => {
           error: undefined,
         },
       };
-      console.log(actual);
       expect(actual).to.deep.equal(expected);
     });
 
