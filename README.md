@@ -75,8 +75,6 @@ const {
   isFetchingSelector,
   lastResponseSelector,
   errorSelector,
-  completeTodosSelector,
-  incompleteTodosSelector
 } = makeFetchAction('FETCH_TODOS', () => ({
   endpoint: '/api/v1/todos'
 })
