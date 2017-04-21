@@ -15,6 +15,8 @@ import { map } from 'rxjs/operator/map';
 
 const NOW = 1478329954380;
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 300
+
 describe('middleware', () => {
   it('should be a function', () => {
     expect(middleware).toBeInstanceOf(Function);
@@ -154,7 +156,7 @@ describe('middleware', () => {
 
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  context('mutiple api calls', () => {
+  context('multiple api calls', () => {
     it('should not drop pending request when there is a new one', async () => {
       const store = getStore();
 
@@ -170,13 +172,13 @@ describe('middleware', () => {
       store.dispatch({
         [CALL_API]: {
           name: 'TEST_API_30',
-          endpoint: 'http://localhost:3000/api/test/1',
+          endpoint: 'http://localhost:3000/api/test/1'
         }
       });
       store.dispatch({
         [CALL_API]: {
           name: 'TEST_API_10',
-          endpoint: 'http://localhost:3000/api/test/2',
+          endpoint: 'http://localhost:3000/api/test/2'
         }
       });
 

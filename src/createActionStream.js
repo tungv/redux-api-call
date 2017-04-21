@@ -26,14 +26,14 @@ const isValid = (api) =>
 
 const makeHOObservableFromActionCreator = (actionCreator) => ({ api, resp, error }) => fromPromise(
   error ?
-    Promise.resolve(actionCreator(api)({ error })) :
-    resp.json().then(json => actionCreator(api)(json))
+    Promise.resolve(actionCreator(api)(error.data)) :
+    Promise.resolve(actionCreator(api)(resp.data))
 );
 
 const fromRespToSuccessActionStream = makeHOObservableFromActionCreator(makeSuccessAction);
 const fromRespToFailureActionStream = makeHOObservableFromActionCreator(makeFailureAction);
 const fromRespToActionStream = (data) =>
-  data.resp && data.resp.ok ?
+  data.resp ?
     fromRespToSuccessActionStream(data) :
     fromRespToFailureActionStream(data);
 
