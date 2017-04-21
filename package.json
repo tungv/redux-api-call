@@ -9,7 +9,7 @@
     "build": "rollup -c",
     "postbuild": "cp {package.json,README.md} .build",
     "prepatch": "git commit -am\"prepare to deploy\" || true",
-    "patch": "npm version patch; npm run build",
+    "patch": "npm version prerelease; npm run build",
     "postpatch": "cd .build; npm publish; cd ..; rm -r .build",
     "test": "jest",
     "test:watch": "jest --watchAll"
