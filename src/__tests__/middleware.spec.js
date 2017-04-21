@@ -172,13 +172,13 @@ describe('middleware', () => {
       store.dispatch({
         [CALL_API]: {
           name: 'TEST_API_30',
-          endpoint: 'http://localhost:3000/api/test/1'
+          endpoint: 'http://localhost:3000/api/test/1',
         }
       });
       store.dispatch({
         [CALL_API]: {
           name: 'TEST_API_10',
-          endpoint: 'http://localhost:3000/api/test/2'
+          endpoint: 'http://localhost:3000/api/test/2',
         }
       });
 
