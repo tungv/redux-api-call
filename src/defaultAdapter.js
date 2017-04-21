@@ -1,17 +1,5 @@
-const race = (promise, ms) => {
-  if (!ms) {
-    return promise;
-  }
-
-  const timerPromise = new Promise((resolve, reject) => {
-    setTimeout(() => reject(new Error('Timeout')), ms);
-  });
-
-  return Promise.race([promise, timerPromise]);
-};
-
-export default async ({endpoint, timeout, ...others}) => {
-  const resp = await race(fetch(endpoint, others), timeout);
+export default async ({endpoint, ...others}) => {
+  const resp = await fetch(endpoint, others);
   if (!resp.ok) {
     const error = new Error('Bad Response');
     error.statusCode = resp.statusCode;
