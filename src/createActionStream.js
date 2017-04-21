@@ -38,8 +38,8 @@ const fromRespToActionStream = (data) =>
     fromRespToFailureActionStream(data);
 
 // create an observable of promises
-const callApiInGroup = (group$, adapter) => group$::switchMap(
-  api => fromPromise(adapter(api).then(
+const callApiInGroup = (group$, adapter, getState) => group$::switchMap(
+  api => fromPromise(adapter(api, getState).then(
     resp => ({ resp, api }),
     error => ({ error, api })
   ))
@@ -60,7 +60,7 @@ export default (actions$, { getState }, adapter) => {
 
   // create a higher-order observable of outgoing requests streams
   // each item is an observable
-  const resp$ = apiGroup$::mergeMap(apiInGroup$ => callApiInGroup(apiInGroup$, adapter));
+  const resp$ = apiGroup$::mergeMap(apiInGroup$ => callApiInGroup(apiInGroup$, adapter, getState));
 
   const fetchDoneActions$ = resp$::mergeMap(fromRespToActionStream);
 

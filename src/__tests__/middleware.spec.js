@@ -263,7 +263,7 @@ describe('middleware', () => {
       });
     });
 
-    xit('should dispatch FETCH_COMPLETE with a text object', async () => {
+    it('should dispatch FETCH_COMPLETE with a text object', async () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { body: 'string' });
 
@@ -282,7 +282,7 @@ describe('middleware', () => {
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
-          text: 'string',
+          json: 'string',
         },
       });
     });
@@ -313,7 +313,7 @@ describe('middleware', () => {
       })
     });
 
-    xit('should dispatch FETCH_FAILURE with a error object', async () => {
+    it('should dispatch FETCH_FAILURE with a error object', async () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: 'just a message' });
       store.dispatch({
@@ -330,7 +330,7 @@ describe('middleware', () => {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
-          error: 'just a message',
+          json: 'just a message',
         },
       });
     });
