@@ -6,14 +6,10 @@ const composeAdatpers = (...adapters) => {
   const head = reversed[0];
   const tail = reversed.slice(1);
 
-  const chain = getState => tail.reduce(
+  return getState => tail.reduce(
     (acc, current) => current(acc, getState),
-    head(null, getState)
+    head(x => x, getState)
   );
-
-  return (getState) => async (req) => {
-    return chain(getState)(req);
-  }
 }
 
 
