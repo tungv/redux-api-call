@@ -2,6 +2,9 @@ import fetch from './adapters/fetch'
 import parseJSON from './adapters/parseJSON';
 
 const composeAdatpers = (...adapters) => {
+  if (adapters.length === 0) {
+    throw new Error('redux-api-call: composeAdatpers must take at least one adapter')
+  }
   const reversed = adapters.reverse();
   const head = reversed[0];
   const tail = reversed.slice(1);
