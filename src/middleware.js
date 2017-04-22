@@ -1,13 +1,15 @@
 import { Subject } from 'rxjs/Subject';
-import defaultAdapter from './defaultAdapter'
+import defaultCreateAdapter from './defaultAdapter'
 import createActionStream from './createActionStream'
 import { CALL_API } from './constants';
 
 // middleware
-export default (adapter = defaultAdapter) => ({ dispatch, getState }) => {
+export default (createAdapter = defaultCreateAdapter) => ({ dispatch, getState }) => {
   const apiCallsAction$ = new Subject();
 
-  createActionStream(apiCallsAction$, { getState }, adapter).subscribe(dispatch);
+  const finalAdapter = createAdapter(getState);
+
+  createActionStream(apiCallsAction$, { getState }, finalAdapter).subscribe(dispatch);
 
   return next => action => {
     if (!action[CALL_API]) {
