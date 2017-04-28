@@ -1,7 +1,4 @@
-import fetch from './adapters/fetch'
-import parseJSON from './adapters/parseJSON';
-
-const composeAdatpers = (...adapters) => {
+export default (...adapters) => {
   if (adapters.length === 0) {
     throw new Error('redux-api-call: composeAdatpers must take at least one adapter')
   }
@@ -14,6 +11,3 @@ const composeAdatpers = (...adapters) => {
     head(x => x, getState)
   );
 }
-
-
-export default composeAdatpers(parseJSON, fetch);

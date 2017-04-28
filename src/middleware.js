@@ -1,7 +1,11 @@
 import { Subject } from 'rxjs/Subject';
-import defaultCreateAdapter from './defaultAdapter'
+import composeAdapters from './composeAdapters.js';
 import createActionStream from './createActionStream'
 import { CALL_API } from './constants';
+import fetch from './adapters/fetch'
+import parseJSON from './adapters/parseJSON';
+
+const defaultCreateAdapter = composeAdapters(parseJSON, fetch);
 
 // middleware
 export default (createAdapter = defaultCreateAdapter) => ({ dispatch, getState }) => {
