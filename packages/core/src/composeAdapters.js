@@ -1,4 +1,4 @@
-export default (...adapters) => {
+const compose = (...adapters) => {
   if (adapters.length === 0) {
     throw new Error('redux-api-call: composeAdatpers must take at least one adapter')
   }
@@ -11,3 +11,5 @@ export default (...adapters) => {
     head(x => x, getState)
   );
 }
+
+export default compose;
