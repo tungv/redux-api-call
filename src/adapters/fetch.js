@@ -8,8 +8,8 @@ export default (next) => async ({endpoint, ...others}) => {
     throw error;
   }
 
-  return {
+  return next({
     data: await resp.text(),
     headers: resp.headers,
-  };
+  });
 };
