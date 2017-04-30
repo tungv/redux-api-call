@@ -5,13 +5,12 @@ import { CALL_API } from './constants';
 import fetch from 'redux-api-call-adapter-fetch';
 import parseJSON from 'redux-api-call-adapter-json';
 
-const defaultCreateAdapter = composeAdapters(parseJSON, fetch);
+const defaultAdapter = composeAdapters(parseJSON, fetch);
 
-// middleware
-export default (createAdapter = defaultCreateAdapter) => ({ dispatch, getState }) => {
+export const createAPIMiddleware = (adapter) => ({ dispatch, getState }) => {
   const apiCallsAction$ = new Subject();
 
-  const finalAdapter = createAdapter(getState);
+  const finalAdapter = adapter(getState);
 
   createActionStream(apiCallsAction$, { getState }, finalAdapter).subscribe(dispatch);
 
@@ -24,3 +23,7 @@ export default (createAdapter = defaultCreateAdapter) => ({ dispatch, getState }
     apiCallsAction$.next(action);
   };
 }
+
+
+// middleware
+export default createAPIMiddleware(defaultAdapter)

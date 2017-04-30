@@ -11,7 +11,7 @@
     "prepatch": "git commit -am\"prepare to deploy\" || true",
     "patch": "npm version prerelease; npm run build",
     "postpatch": "echo 'cd .build; npm publish; cd ..; rm -r .build'",
-    "test": "jest",
+    "test": "jest --coverage --forceExit",
     "test:watch": "jest --watchAll"
   },
   "jest": {

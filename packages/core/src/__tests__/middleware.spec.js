@@ -17,11 +17,7 @@ const NOW = 1478329954380;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 300
 
-describe('middleware', () => {
-  it('should be a function', () => {
-    expect(middleware).toBeInstanceOf(Function);
-  });
-
+describe('default middleware', () => {
   afterEach(() => {
     fetchMock.restore();
   })
@@ -35,7 +31,7 @@ describe('middleware', () => {
   });
 
   const getStore = (initialState = {}) => {
-    const mockStore = configureStore([middleware()]);
+    const mockStore = configureStore([middleware]);
     return mockStore(initialState);
   };
 

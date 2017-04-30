@@ -1,5 +1,7 @@
 import middleware from './middleware';
 import makeFetchAction from './makeFetchAction';
+import composeAdapters from './composeAdapters';
+
 import {
   REDUCER_PATH,
   ACTION_FETCH_START,
@@ -17,4 +19,4 @@ const ACTIONS = {
   UPDATE_LOCAL: ACTION_UPDATE_LOCAL,
 };
 
-export { middleware, makeFetchAction, reducers, ACTIONS };
+export { middleware, makeFetchAction, reducers, ACTIONS, composeAdapters };
