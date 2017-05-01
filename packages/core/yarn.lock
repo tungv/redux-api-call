@@ -2704,6 +2704,14 @@ redeyed@~1.0.0:
   dependencies:
     esprima "~3.0.0"
 
+redux-api-call-adapter-fetch@^1.0.0-0:
+  version "1.0.0-0"
+  resolved "https://registry.yarnpkg.com/redux-api-call-adapter-fetch/-/redux-api-call-adapter-fetch-1.0.0-0.tgz#94b9526ed6efc23d2dadfcdc3b6b02f878ff61be"
+
+redux-api-call-adapter-json@^1.0.0-0:
+  version "1.0.0-0"
+  resolved "https://registry.yarnpkg.com/redux-api-call-adapter-json/-/redux-api-call-adapter-json-1.0.0-0.tgz#5747d98b0f269408a7c2467d47e5c081ee4f4b67"
+
 redux-mock-store@^1.2.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.2.3.tgz#1b3ad299da91cb41ba30d68e3b6f024475fb9e1b"

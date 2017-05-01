@@ -3,6 +3,7 @@
     "lerna": "^2.0.0-rc.3"
   },
   "scripts": {
-    "test": "lerna bootstrap; lerna run test"
+    "postinstall": "lerna bootstrap --npm-client=yarn",
+    "test": "lerna run test"
   }
 }
