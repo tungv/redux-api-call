@@ -3,6 +3,6 @@
     "lerna": "^2.0.0-rc.3"
   },
   "scripts": {
-    "test": "lerna run test"
+    "test": "lerna bootstrap; lerna run test"
   }
 }
