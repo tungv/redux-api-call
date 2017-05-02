@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call",
-  "version": "1.0.0-9",
+  "version": "1.0.0-10",
   "license": "MIT",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
@@ -75,8 +75,8 @@
     "timekeeper": "^0.1.1"
   },
   "dependencies": {
-    "redux-api-call-adapter-fetch": "^1.0.0-9",
-    "redux-api-call-adapter-json": "^1.0.0-9"
+    "redux-api-call-adapter-fetch": "^1.0.0-10",
+    "redux-api-call-adapter-json": "^1.0.0-10"
   },
   "peerDependencies": {
     "redux": "^3.6.0",
