@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call-adapter-fetch",
-  "version": "1.0.0-5",
+  "version": "1.0.0-6",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to fetch data using HTML5 Fetch API",
   "main": "lib/index.js",
   "module": "src/index.js",
@@ -19,7 +19,7 @@
   "scripts": {
     "build": "babel ./src -d ./lib",
     "build:clean": "rm -rf ./lib",
-    "prepublish": "yarn build"
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
