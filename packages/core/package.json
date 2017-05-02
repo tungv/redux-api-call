@@ -1,16 +1,15 @@
 {
   "name": "redux-api-call",
-  "version": "1.0.0-1",
+  "version": "1.0.0-2",
   "license": "MIT",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
   "scripts": {
-    "prebuild": "rm -rf .build || true",
+    "prepublish": "npm run build",
+    "postpublish": "npm run build:clean",
+    "build:clean": "rm -rf .build || true",
+    "prebuild": "npm run build:clean",
     "build": "rollup -c",
-    "postbuild": "cp {package.json,README.md} .build",
-    "prepatch": "git commit -am\"prepare to deploy\" || true",
-    "patch": "npm version prerelease; npm run build",
-    "postpatch": "echo 'cd .build; npm publish; cd ..; rm -r .build'",
     "test": "jest --coverage --forceExit",
     "test:watch": "jest --watchAll"
   },
