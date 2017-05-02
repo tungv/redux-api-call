@@ -1,8 +1,8 @@
 {
   "name": "redux-api-call-adapter-fetch",
-  "version": "1.0.0-7",
+  "version": "1.0.0-8",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to fetch data using HTML5 Fetch API",
-  "main": "lib/index.js",
+  "main": ".build/index.js",
   "module": "src/index.js",
   "repository": "tungv/redux-api-call",
   "author": "Tung Vu <me@tungv.com>",
@@ -17,8 +17,8 @@
     ]
   },
   "scripts": {
-    "build": "babel ./src -d ./lib",
-    "build:clean": "rm -rf ./lib",
+    "build": "babel ./src -d ./.build",
+    "build:clean": "rm -rf ./.build",
     "prepublish": "npm run build"
   },
   "devDependencies": {
