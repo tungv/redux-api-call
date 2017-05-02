@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call",
-  "version": "1.0.0-2",
+  "version": "1.0.0-3",
   "license": "MIT",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
@@ -38,7 +38,7 @@
       "__tests__"
     ]
   },
-  "main": "index.js",
+  "main": ".build/index.js",
   "devDependencies": {
     "babel-core": "^6.14.0",
     "babel-jest": "^16.0.0",
