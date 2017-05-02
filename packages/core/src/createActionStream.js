@@ -26,8 +26,8 @@ const isValid = (api) =>
 
 const makeHOObservableFromActionCreator = (actionCreator) => ({ api, resp, error }) => fromPromise(
   error ?
-    Promise.resolve(actionCreator(api)(error.data)) :
-    Promise.resolve(actionCreator(api)(resp.data))
+    Promise.resolve(actionCreator(api)(error.payload)) :
+    Promise.resolve(actionCreator(api)(resp.payload))
 );
 
 const fromRespToSuccessActionStream = makeHOObservableFromActionCreator(makeSuccessAction);

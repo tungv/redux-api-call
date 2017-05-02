@@ -8,15 +8,15 @@ const tryJSON = (raw) => {
 
 export default (next) => async (req) => {
   try {
-    const { data, ...others } = await next(req);
+    const { payload, ...others } = await next(req);
     return {
-      data: tryJSON(data),
+      payload: tryJSON(payload),
       ...others
     }
 
-  } catch ({ data, ...others }) {
+  } catch ({ payload, ...others }) {
     throw {
-      data: tryJSON(data),
+      payload: tryJSON(payload),
       ...others
     }
   }
