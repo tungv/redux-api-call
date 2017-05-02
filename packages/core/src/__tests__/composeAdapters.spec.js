@@ -1,0 +1,53 @@
+import composeAdapters from '../composeAdapters'
+
+describe('composeAdatpers()', () => {
+  it('should throw error if no adapter is passed', () => {
+    expect(() => {
+      composeAdapters()
+    }).toThrow(/least one adapter/)
+  });
+
+  it('should work with one adapter', () => {
+    const expectedFetcher = jest.fn();
+    const adapter = jest.fn(next => expectedFetcher);
+
+    const composed = composeAdapters(adapter);
+
+    const getState = jest.fn();
+    const fetcher = composed(getState);
+
+    expect(fetcher).toBe(expectedFetcher);
+  });
+
+  it('should work with multiple adapters', async () => {
+    const expectedFetcher = jest.fn(() => ({
+      data: 42,
+      headers: {}
+    }));
+
+    const adapter1 = jest.fn(next => async (req) => {
+      const transformed = { ...req, key: 'value' };
+      const resp = await next(transformed);
+      return {
+        data: resp.data + 1,
+        headers: { 'x-header': 42 }
+      }
+    });
+
+    const adapter2 = jest.fn(next => expectedFetcher);
+
+    const composed = composeAdapters(adapter1, adapter2);
+
+    const getState = jest.fn();
+    const fetcher = composed(getState);
+    const originalRequest = { iamauthentic: true };
+
+    const result = await fetcher(originalRequest);
+
+    expect(expectedFetcher).toBeCalledWith({ iamauthentic: true, key: 'value' })
+    expect(result).toEqual({
+      data: 43,
+      headers: { 'x-header': 42 }
+    })
+  });
+});

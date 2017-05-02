@@ -1,5 +1,9 @@
 import middleware from './middleware';
 import makeFetchAction from './makeFetchAction';
+import composeAdapters from './composeAdapters';
+import fetch from 'redux-api-call-adapter-fetch';
+import json from 'redux-api-call-adapter-json';
+
 import {
   REDUCER_PATH,
   ACTION_FETCH_START,
@@ -17,4 +21,6 @@ const ACTIONS = {
   UPDATE_LOCAL: ACTION_UPDATE_LOCAL,
 };
 
-export { middleware, makeFetchAction, reducers, ACTIONS };
+export const defaultTransformers = [json, fetch];
+
+export { middleware, makeFetchAction, reducers, ACTIONS, composeAdapters };

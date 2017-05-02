@@ -1,82 +1,9 @@
 {
-  "name": "redux-api-call",
-  "version": "0.3.16",
-  "license": "MIT",
-  "description": "Redux utilities for making API calls",
-  "repository": "https://github.com/tungv/redux-api-call.git",
-  "scripts": {
-    "prebuild": "rm -rf .build || true",
-    "build": "rollup -c",
-    "postbuild": "cp {package.json,README.md} .build",
-    "prepatch": "git commit -am\"prepare to deploy\" || true",
-    "patch": "npm version patch; npm run build",
-    "postpatch": "cd .build; npm publish; cd ..; rm -r .build",
-    "test": "jest",
-    "test:watch": "jest --watchAll"
-  },
-  "jest": {
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(js)$",
-    "setupFiles": [
-      "node_modules/isomorphic-fetch/fetch-npm-node.js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "vendor",
-      ".build"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "node"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy",
-      "^.+\\.(scss|css|less)(\\?\\w*)?$": "identity-obj-proxy"
-    },
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "__mocks__",
-      "__tests__"
-    ]
-  },
-  "main": "index.js",
   "devDependencies": {
-    "babel-core": "^6.14.0",
-    "babel-jest": "^16.0.0",
-    "babel-plugin-external-helpers": "^6.8.0",
-    "babel-plugin-transform-function-bind": "^6.8.0",
-    "babel-plugin-transform-object-assign": "^6.8.0",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-polyfill": "^6.16.0",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-es2015-rollup": "^1.2.0",
-    "babel-preset-es2016": "^6.11.3",
-    "babel-preset-stage-1": "^6.13.0",
-    "chai": "^3.5.0",
-    "fetch-mock": "^5.5.0",
-    "isomorphic-fetch": "^2.2.1",
-    "jest": "^16.0.2",
-    "jest-cli": "^16.0.1",
-    "lodash": "^4.16.1",
-    "redux": "^3.6.0",
-    "redux-mock-store": "^1.2.0",
-    "rollup": "^0.36.0",
-    "rollup-plugin-alias": "^1.2.0",
-    "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-buble": "^0.14.0",
-    "rollup-plugin-cleanup": "^0.1.4",
-    "rollup-plugin-multi-entry": "^2.0.1",
-    "rollup-plugin-strip": "^1.1.1",
-    "rollup-plugin-stub": "^1.1.0",
-    "rollup-plugin-uglify": "^1.0.1",
-    "rxjs": "^5.0.0-rc.2",
-    "sinon": "^1.17.6",
-    "source-map-support": "^0.4.2",
-    "timekeeper": "^0.1.1"
+    "lerna": "^2.0.0-rc.3"
   },
-  "peerDependencies": {
-    "redux": "^3.6.0",
-    "rxjs": "^5.0.0-rc.1"
+  "scripts": {
+    "postinstall": "lerna bootstrap --npm-client=yarn",
+    "test": "lerna run test"
   }
 }

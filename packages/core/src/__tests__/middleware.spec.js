@@ -15,11 +15,9 @@ import { map } from 'rxjs/operator/map';
 
 const NOW = 1478329954380;
 
-describe('middleware', () => {
-  it('should be a function', () => {
-    expect(middleware).toBeInstanceOf(Function);
-  });
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 300
 
+describe('default middleware', () => {
   afterEach(() => {
     fetchMock.restore();
   })
@@ -33,7 +31,7 @@ describe('middleware', () => {
   });
 
   const getStore = (initialState = {}) => {
-    const mockStore = configureStore([middleware()]);
+    const mockStore = configureStore([middleware]);
     return mockStore(initialState);
   };
 
@@ -154,7 +152,7 @@ describe('middleware', () => {
 
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  context('mutiple api calls', () => {
+  context('multiple api calls', () => {
     it('should not drop pending request when there is a new one', async () => {
       const store = getStore();
 
@@ -261,7 +259,7 @@ describe('middleware', () => {
       });
     });
 
-    xit('should dispatch FETCH_COMPLETE with a text object', async () => {
+    it('should dispatch FETCH_COMPLETE with a text object', async () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { body: 'string' });
 
@@ -280,7 +278,7 @@ describe('middleware', () => {
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
-          text: 'string',
+          json: 'string',
         },
       });
     });
@@ -311,7 +309,7 @@ describe('middleware', () => {
       })
     });
 
-    xit('should dispatch FETCH_FAILURE with a error object', async () => {
+    it('should dispatch FETCH_FAILURE with a error object', async () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: 'just a message' });
       store.dispatch({
@@ -328,7 +326,7 @@ describe('middleware', () => {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
-          error: 'just a message',
+          json: 'just a message',
         },
       });
     });
