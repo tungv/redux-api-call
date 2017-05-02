@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call-adapter-fetch",
-  "version": "1.0.0-8",
+  "version": "1.0.0-9",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to fetch data using HTML5 Fetch API",
   "main": ".build/index.js",
   "module": "src/index.js",
