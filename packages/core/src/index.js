@@ -1,4 +1,4 @@
-import middleware from './middleware';
+import middleware, { createAPIMiddleware } from './middleware';
 import makeFetchAction from './makeFetchAction';
 import composeAdapters from './composeAdapters';
 import fetch from 'redux-api-call-adapter-fetch';
@@ -23,4 +23,4 @@ const ACTIONS = {
 
 export const defaultTransformers = [json, fetch];
 
-export { middleware, makeFetchAction, reducers, ACTIONS, composeAdapters };
+export { middleware, makeFetchAction, reducers, ACTIONS, composeAdapters, createAPIMiddleware };
