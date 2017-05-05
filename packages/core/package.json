@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call",
-  "version": "1.0.0-11",
+  "version": "1.0.0-12",
   "license": "MIT",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
