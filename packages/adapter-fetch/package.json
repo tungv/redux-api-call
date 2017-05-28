@@ -3,7 +3,6 @@
   "version": "1.0.0-11",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to fetch data using HTML5 Fetch API",
   "main": ".build/index.js",
-  "module": "src/index.js",
   "repository": "tungv/redux-api-call",
   "author": "Tung Vu <me@tungv.com>",
   "license": "MIT",
