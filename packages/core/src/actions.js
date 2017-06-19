@@ -22,20 +22,22 @@ export const makeStartAction = api => () => ({
   },
 });
 
-export const makeSuccessAction = api => (json) => ({
+export const makeSuccessAction = api => (payload, meta) => ({
   type: ACTION_FETCH_COMPLETE,
   payload: {
     ...api,
-    json,
+    json: payload,
     respondedAt: Date.now(),
   },
+  meta,
 });
 
-export const makeFailureAction = api => json => ({
+export const makeFailureAction = api => (payload, meta) => ({
   type: ACTION_FETCH_FAILURE,
   payload: {
     ...api,
-    json,
+    json: payload,
     respondedAt: Date.now(),
   },
+  meta,
 });
