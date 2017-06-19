@@ -45,6 +45,7 @@ const reducer = handleActions({
       lastResponse: getRespondedAt(action),
       data: getJSONResponse(action),
       error: null,
+      headers: action.meta,
     }),
   [ACTION_FETCH_FAILURE]: (state, action) => updateWith(
     state,
@@ -52,6 +53,7 @@ const reducer = handleActions({
       isFetching: false,
       isInvalidated: true,
       error: getJSONResponse(action),
+      headers: action.meta,
     }),
   [ACTION_UPDATE_LOCAL]: (state, action) => updateWith(
     state,

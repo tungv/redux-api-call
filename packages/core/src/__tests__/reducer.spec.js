@@ -121,7 +121,8 @@ describe('reducer', () => {
         endpoint: 'http://example.com',
       };
       const json = { key: 'new_value' };
-      return reducer(state, makeSuccessAction(api)(json));
+      const headers = { header: 'value' };
+      return reducer(state, makeSuccessAction(api)(json, headers));
     };
 
     it('should set isFetching to false', () => {
@@ -142,6 +143,10 @@ describe('reducer', () => {
 
     it('should set error to null', () => {
       expect(get(setup(), 'SAMPLE.error')).to.equal(null);
+    });
+
+    it('should set headers to new value', () => {
+      expect(get(setup(), 'SAMPLE.headers')).to.deep.equal({ header: 'value' });
     });
   });
 
@@ -164,7 +169,8 @@ describe('reducer', () => {
         endpoint: 'http://example.com',
       };
       const json = { error: 'new error' };
-      return reducer(state, makeFailureAction(api)(json));
+      const headers = { header: 'new header' };
+      return reducer(state, makeFailureAction(api)(json, headers));
     };
 
     it('should set isFetching to false', () => {
@@ -185,6 +191,10 @@ describe('reducer', () => {
 
     it('should set error to null', () => {
       expect(get(setup(), 'SAMPLE.error')).to.deep.equal({ error: 'new error' });
+    });
+
+    it('should set error to null', () => {
+      expect(get(setup(), 'SAMPLE.headers')).to.deep.equal({ header: 'new header' });
     });
   });
 
