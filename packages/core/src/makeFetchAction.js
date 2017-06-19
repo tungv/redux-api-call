@@ -51,6 +51,7 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   const isFetchingSelector = get([REDUCER_PATH, apiName, 'isFetching'], false);
   const isInvalidatedSelector = get([REDUCER_PATH, apiName, 'isInvalidated'], false);
   const dataSelector = get([REDUCER_PATH, apiName, 'data'], null);
+  const headersSelector = get([REDUCER_PATH, apiName, 'headers'], null);
   const errorSelector = get([REDUCER_PATH, apiName, 'error'], null);
   const lastResponseSelector = get([REDUCER_PATH, apiName, 'lastResponse'], null);
 
@@ -60,6 +61,7 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     isFetchingSelector,
     isInvalidatedSelector,
     dataSelector,
+    headersSelector,
     errorSelector,
     lastResponseSelector,
     resetter,
