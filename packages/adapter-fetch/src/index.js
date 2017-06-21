@@ -1,5 +1,12 @@
 export default next => async ({ endpoint, ...others }) => {
-  const resp = await fetch(endpoint, others);
+  let resp;
+
+  try {
+    resp = await fetch(endpoint, others);
+  } catch (error) {
+    error.payload = error.stack;
+    throw error;
+  }
 
   const meta = {};
   resp.headers.forEach((value, key) => meta[key] = value);
