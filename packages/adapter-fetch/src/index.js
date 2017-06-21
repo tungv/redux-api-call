@@ -4,8 +4,11 @@ export default next => async ({ endpoint, ...others }) => {
   try {
     resp = await fetch(endpoint, others);
   } catch (error) {
-    error.payload = error.stack;
-    throw error;
+    throw {
+      error: true,
+      payload: new Error(error.message),
+      meta: {},
+    }
   }
 
   const meta = {};

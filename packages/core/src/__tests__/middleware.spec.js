@@ -314,6 +314,30 @@ describe('default middleware', () => {
   });
 
   describe('dispatching failure action', () => {
+    it('should dispatch FETCH_FAILURE when fetch throw an error', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', {
+        throws: new Error('fetch failed'),
+      });
+      store.dispatch({
+        [CALL_API]: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+      const [_, failure] = await takeActionsUntil(store, 2);
+      expect(failure).toEqual({
+        type: ACTION_FETCH_FAILURE,
+        meta: {},
+        payload: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          json: new Error('fetch failed'),
+        },
+      });
+    });
+
     it('should dispatch FETCH_FAILURE with a json object', async () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: { msg: 'ERRRRR!' }});
