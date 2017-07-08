@@ -1,5 +1,6 @@
 import fetch from 'redux-api-call-adapter-fetch';
 import parseJSON from 'redux-api-call-adapter-json';
+import dedupe from 'redux-api-call-adapter-dedupe';
 
 import {
   makeFailureAction,
@@ -11,7 +12,7 @@ import applyFunctions from './utils/applyFunctions';
 import composeAdapters from './composeAdapters.js';
 import { CALL_API } from './constants';
 
-const defaultAdapter = composeAdapters(parseJSON, fetch);
+const defaultAdapter = composeAdapters(parseJSON, dedupe, fetch);
 const isValid = api =>
   typeof api.name === 'string' && typeof api.endpoint === 'string';
 
@@ -37,7 +38,9 @@ export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
 
     finalAdapter(request).then(
       response => {
-        dispatch(makeSuccessAction(request)(response.payload, response.meta));
+        if (response) {
+          dispatch(makeSuccessAction(request)(response.payload, response.meta));
+        }
       },
       failure => {
         dispatch(makeFailureAction(request)(failure.payload, failure.meta));

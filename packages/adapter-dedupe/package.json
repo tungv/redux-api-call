@@ -1,0 +1,29 @@
+{
+  "name": "redux-api-call-adapter-dedupe",
+  "version": "1.0.0-13",
+  "description": "redux-api-call (npm.im/redux-api-call) adapter to dedupe similar request\"",
+  "main": ".build/index.js",
+  "repository": "tungv/redux-api-call",
+  "author": "Tung Vu <me@tungv.com>",
+  "license": "MIT",
+  "babel": {
+    "presets": [
+      "stage-3",
+      "env"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
+  },
+  "scripts": {
+    "build": "babel ./src -d ./.build",
+    "build:clean": "rm -rf ./.build",
+    "prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-stage-3": "^6.24.1"
+  }
+}
