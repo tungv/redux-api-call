@@ -1,18 +1,23 @@
-import { Subject } from 'rxjs/Subject';
-import composeAdapters from './composeAdapters.js';
-import createActionStream from './createActionStream'
-import { CALL_API } from './constants';
 import fetch from 'redux-api-call-adapter-fetch';
 import parseJSON from 'redux-api-call-adapter-json';
 
+import {
+  makeFailureAction,
+  makeStartAction,
+  makeStartErrorAction,
+  makeSuccessAction,
+} from './actions';
+import applyFunctions from './utils/applyFunctions';
+import composeAdapters from './composeAdapters.js';
+import { CALL_API } from './constants';
+
 const defaultAdapter = composeAdapters(parseJSON, fetch);
+const isValid = api =>
+  typeof api.name === 'string' && typeof api.endpoint === 'string';
 
-export const createAPIMiddleware = (adapter) => ({ dispatch, getState }) => {
-  const apiCallsAction$ = new Subject();
-
+export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
   const finalAdapter = adapter(getState);
-
-  createActionStream(apiCallsAction$, { getState }, finalAdapter).subscribe(dispatch);
+  const resolveState = applyFunctions(getState);
 
   return next => action => {
     if (!action[CALL_API]) {
@@ -20,10 +25,26 @@ export const createAPIMiddleware = (adapter) => ({ dispatch, getState }) => {
       return;
     }
 
-    apiCallsAction$.next(action);
-  };
-}
+    const rawRequest = action[CALL_API];
+    const request = resolveState(rawRequest);
 
+    if (!isValid(request)) {
+      dispatch(makeStartErrorAction(request)());
+      return;
+    }
+
+    dispatch(makeStartAction(request)());
+
+    finalAdapter(request).then(
+      response => {
+        dispatch(makeSuccessAction(request)(response.payload, response.meta));
+      },
+      failure => {
+        dispatch(makeFailureAction(request)(failure.payload, failure.meta));
+      }
+    );
+  };
+};
 
 // middleware
-export default createAPIMiddleware(defaultAdapter)
+export default createAPIMiddleware(defaultAdapter);
