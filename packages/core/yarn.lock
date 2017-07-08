@@ -2299,9 +2299,13 @@ read-pkg@^1.0.0:
     normalize-package-data "^2.3.2"
     path-type "^1.0.0"
 
-redux-api-call-adapter-fetch@^1.0.0-13:
-  version "1.0.0-13"
-  resolved "https://registry.yarnpkg.com/redux-api-call-adapter-fetch/-/redux-api-call-adapter-fetch-1.0.0-13.tgz#0090648dab39fd49838de30872824dd8dcc382fa"
+redux-api-call-adapter-dedupe@^1.0.0-17:
+  version "1.0.0-17"
+  resolved "https://registry.yarnpkg.com/redux-api-call-adapter-dedupe/-/redux-api-call-adapter-dedupe-1.0.0-17.tgz#fb161224c77687dc50008c78eb2d013502ee51dd"
+
+redux-api-call-adapter-fetch@^1.0.0-17:
+  version "1.0.0-17"
+  resolved "https://registry.yarnpkg.com/redux-api-call-adapter-fetch/-/redux-api-call-adapter-fetch-1.0.0-17.tgz#135d9a8274156bfce391e13a6a12e4b7364abad0"
 
 redux-api-call-adapter-json@^1.0.0-13:
   version "1.0.0-13"
@@ -2519,9 +2523,9 @@ rollup@^0.36.0:
   dependencies:
     source-map-support "^0.4.0"
 
-rxjs@^5.0.0-rc.2:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.3.0.tgz#d88ccbdd46af290cbdb97d5d8055e52453fabe2d"
+rxjs@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
   dependencies:
     symbol-observable "^1.0.1"
 
