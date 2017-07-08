@@ -20,7 +20,7 @@ export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
   const finalAdapter = adapter(getState);
   const resolveState = applyFunctions(getState);
 
-  return next => action => {
+  return next => async action => {
     if (!action[CALL_API]) {
       next(action);
       return;
@@ -36,16 +36,14 @@ export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
 
     dispatch(makeStartAction(request)());
 
-    finalAdapter(request).then(
-      response => {
-        if (response) {
-          dispatch(makeSuccessAction(request)(response.payload, response.meta));
-        }
-      },
-      failure => {
-        dispatch(makeFailureAction(request)(failure.payload, failure.meta));
+    try {
+      const response = await finalAdapter(request);
+      if (response) {
+        dispatch(makeSuccessAction(request)(response.payload, response.meta));
       }
-    );
+    } catch (failure) {
+      dispatch(makeFailureAction(request)(failure.payload, failure.meta));
+    }
   };
 };
 
