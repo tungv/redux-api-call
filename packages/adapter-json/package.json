@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call-adapter-json",
-  "version": "1.0.0-13",
+  "version": "1.0.0",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to parse JSON response and fallback to raw text\"",
   "main": ".build/index.js",
   "repository": "tungv/redux-api-call",

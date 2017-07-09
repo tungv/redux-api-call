@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call-adapter-dedupe",
-  "version": "1.0.0-17",
+  "version": "1.0.0",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to dedupe similar request\"",
   "main": ".build/index.js",
   "repository": "tungv/redux-api-call",
