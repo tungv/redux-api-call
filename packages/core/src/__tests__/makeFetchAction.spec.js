@@ -1,14 +1,16 @@
 import { constant } from 'lodash';
+
+import { CALL_API } from '../constants';
 import makeFetchAction from '../makeFetchAction';
 
 describe('makeFetchAction', () => {
   describe('no custom selectors', () => {
     let actual;
+    let configFn;
+
     beforeAll(() => {
-      actual = makeFetchAction(
-        'SAMPLE',
-        constant({ endpoint: 'http://example.com' })
-      );
+      configFn = jest.fn(constant({ endpoint: 'http://example.com' }));
+      actual = makeFetchAction('SAMPLE', configFn);
     });
 
     it('should return actionCreator function', () => {
@@ -35,6 +37,29 @@ describe('makeFetchAction', () => {
       expect(actual.isInvalidatedSelector).toBeInstanceOf(Function);
     });
 
+    describe('actionCreator', () => {
+      it('should call configFn with all parameters', () => {
+        const params = [1, 2, 3];
+        const action = actual.actionCreator(...params);
+        expect(configFn).toBeCalledWith(...params);
+        expect(action[CALL_API]).toEqual({
+          name: 'SAMPLE',
+          endpoint: 'http://example.com',
+        });
+      });
+    });
+
+    describe('updater', () => {
+      it('should call configFn with all parameters', () => {
+        const params = [1, 2, 3];
+        const action = actual.updater(...params);
+        expect(action).toEqual({
+          type: '@@api/UPDATE_LOCAL',
+          payload: { name: 'SAMPLE', data: 1 },
+        });
+      });
+    });
+
     describe('resetter', () => {
       it('should return array of all field if no param', () => {
         const resetter = actual.resetter;
@@ -52,7 +77,7 @@ describe('makeFetchAction', () => {
               'error',
             ],
           },
-        }
+        };
         expect(actualValue).toEqual(expectedValue);
       });
 
@@ -63,19 +88,15 @@ describe('makeFetchAction', () => {
           type: '@@api/RESET_LOCAL',
           payload: {
             name: 'SAMPLE',
-            data: [
-              'lastResponse',
-            ],
+            data: ['lastResponse'],
           },
-        }
+        };
         expect(actualValue).toEqual(expectedValue);
       });
 
       it('should throw if resetter is called with non-string or non-array value', () => {
         const resetter = actual.resetter;
-        expect(
-          () => resetter(1)
-        ).toThrow();
+        expect(() => resetter(1)).toThrow();
       });
 
       it('should return array of multiple fields if param is array', () => {
@@ -85,35 +106,35 @@ describe('makeFetchAction', () => {
           type: '@@api/RESET_LOCAL',
           payload: {
             name: 'SAMPLE',
-            data: [
-              'lastResponse',
-              'error',
-            ],
+            data: ['lastResponse', 'error'],
           },
-        }
+        };
         expect(actualValue).toEqual(expectedValue);
       });
-
     });
 
     describe('selectors', () => {
       describe('isFetchingSelector', () => {
         it('should return isFetching in state if present', () => {
-          expect(actual.isFetchingSelector({
-            api_calls: {
-              SAMPLE: {
-                isFetching: true
-              }
-            }
-          })).toBe(true);
+          expect(
+            actual.isFetchingSelector({
+              api_calls: {
+                SAMPLE: {
+                  isFetching: true,
+                },
+              },
+            })
+          ).toBe(true);
 
-          expect(actual.isFetchingSelector({
-            api_calls: {
-              SAMPLE: {
-                isFetching: false
-              }
-            }
-          })).toBe(false);
+          expect(
+            actual.isFetchingSelector({
+              api_calls: {
+                SAMPLE: {
+                  isFetching: false,
+                },
+              },
+            })
+          ).toBe(false);
         });
 
         it('should return false if api was not called', () => {
@@ -123,21 +144,25 @@ describe('makeFetchAction', () => {
 
       describe('isInvalidatedSelector', () => {
         it('should return isInvalidated in state if present', () => {
-          expect(actual.isInvalidatedSelector({
-            api_calls: {
-              SAMPLE: {
-                isInvalidated: true
-              }
-            }
-          })).toBe(true);
+          expect(
+            actual.isInvalidatedSelector({
+              api_calls: {
+                SAMPLE: {
+                  isInvalidated: true,
+                },
+              },
+            })
+          ).toBe(true);
 
-          expect(actual.isInvalidatedSelector({
-            api_calls: {
-              SAMPLE: {
-                isInvalidated: false
-              }
-            }
-          })).toBe(false);
+          expect(
+            actual.isInvalidatedSelector({
+              api_calls: {
+                SAMPLE: {
+                  isInvalidated: false,
+                },
+              },
+            })
+          ).toBe(false);
         });
 
         it('should return false if api was not called', () => {
@@ -148,13 +173,15 @@ describe('makeFetchAction', () => {
       describe('dataSelector', () => {
         it('should return data in state if present', () => {
           const data = { key: 'value' };
-          expect(actual.dataSelector({
-            api_calls: {
-              SAMPLE: {
-                data
-              }
-            }
-          })).toBe(data);
+          expect(
+            actual.dataSelector({
+              api_calls: {
+                SAMPLE: {
+                  data,
+                },
+              },
+            })
+          ).toBe(data);
         });
 
         it('should return null if api was not called', () => {
@@ -165,13 +192,15 @@ describe('makeFetchAction', () => {
       describe('errorSelector', () => {
         it('should return error in state if present', () => {
           const error = { error: 'value' };
-          expect(actual.errorSelector({
-            api_calls: {
-              SAMPLE: {
-                error
-              }
-            }
-          })).toBe(error);
+          expect(
+            actual.errorSelector({
+              api_calls: {
+                SAMPLE: {
+                  error,
+                },
+              },
+            })
+          ).toBe(error);
         });
 
         it('should return null if api was not called', () => {
@@ -182,20 +211,21 @@ describe('makeFetchAction', () => {
       describe('lastResponseSelector', () => {
         it('should return lastResponse in state if present', () => {
           const lastResponse = 12345;
-          expect(actual.lastResponseSelector({
-            api_calls: {
-              SAMPLE: {
-                lastResponse: 12345
-              }
-            }
-          })).toBe(lastResponse);
+          expect(
+            actual.lastResponseSelector({
+              api_calls: {
+                SAMPLE: {
+                  lastResponse: 12345,
+                },
+              },
+            })
+          ).toBe(lastResponse);
         });
 
         it('should return null if api was not called', () => {
           expect(actual.lastResponseSelector({})).toBe(null);
         });
       });
-
     });
   });
 });
