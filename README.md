@@ -9,10 +9,11 @@ npm i -S redux-api-call
 ```
 
 [**Detailed API Reference**](https://github.com/tungv/redux-api-call/wiki/API-Reference)
+
 [**Migration from v0 to v1**](https://github.com/tungv/redux-api-call/wiki/Migration-to-V1)
 
 # The goals
-One command to create reducers, action creators and selectors for JSON API calls
+One declarative API to create reducers, action creators and selectors for <del>JSON</del> any API calls
 
 # Examples
 
@@ -57,7 +58,7 @@ Steps:
 
 First, you need to install the redux-api-call using npm or yarn
 
-```
+```bash
 npm i -S redux-api-call
 
 // OR
