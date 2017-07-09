@@ -73,6 +73,13 @@ describe('makeFetchAction', () => {
         expect(actualValue).to.deep.equal(expectedValue);
       });
 
+      it('should throw if resetter is called with non-string or non-array value', () => {
+        const resetter = actual.resetter;
+        expect(
+          () => resetter(1)
+        ).to.throw();
+      });
+
       it('should return array of multiple fields if param is array', () => {
         const resetter = actual.resetter;
         const actualValue = resetter(['lastResponse', 'error']);

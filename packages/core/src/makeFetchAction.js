@@ -18,8 +18,7 @@ const normalizeResetData = (data = [
     return [data];
   }
   if (!Array.isArray(data)) {
-    console.warn('You are using resetter wrong, the params should be string, array or undefined');
-    return [];
+    throw new Error('You are using resetter wrong, the params should be string, array or undefined');
   }
   return data;
 }
