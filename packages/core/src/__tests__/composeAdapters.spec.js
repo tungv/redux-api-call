@@ -19,6 +19,12 @@ describe('composeAdatpers()', () => {
     expect(fetcher).toBe(expectedFetcher);
   });
 
+  it('should throw if called without adapters', () => {
+    expect(
+      () => composeAdapters()
+    ).toThrow()
+  });
+
   it('should work with multiple adapters', async () => {
     const expectedFetcher = jest.fn(() => ({
       data: 42,
@@ -49,5 +55,16 @@ describe('composeAdatpers()', () => {
       data: 43,
       headers: { 'x-header': 42 }
     })
+  });
+
+  it('should work when next is called in last adapter', async () => {
+    const adapter = jest.fn(next => (req) => next(req));
+
+    const composed = composeAdapters(adapter);
+
+    const getState = jest.fn();
+    const fetcher = composed(getState);
+    const resp = await fetcher({ a: 1 });
+    expect(resp).toEqual({ a: 1 });
   });
 });
