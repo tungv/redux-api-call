@@ -40,9 +40,7 @@ export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
 
     try {
       const response = await finalAdapter(request);
-      if (response) {
-        dispatch(makeSuccessAction(request, response));
-      }
+      dispatch(makeSuccessAction(request, response));
     } catch (failure) {
       dispatch(makeFailureAction(request, failure));
     }
