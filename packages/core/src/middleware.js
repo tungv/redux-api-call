@@ -13,8 +13,6 @@ import composeAdapters from './composeAdapters.js';
 import { CALL_API } from './constants';
 
 const defaultAdapter = composeAdapters(parseJSON, dedupe, fetch);
-const isValid = api =>
-  typeof api.name === 'string' && typeof api.endpoint === 'string';
 
 export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
   const finalAdapter = adapter(getState);
@@ -29,20 +27,24 @@ export const createAPIMiddleware = adapter => ({ dispatch, getState }) => {
     const rawRequest = action[CALL_API];
     const request = resolveState(rawRequest);
 
-    if (!isValid(request)) {
-      dispatch(makeStartErrorAction(request)());
+    if (typeof request.name !== 'string') {
+      dispatch(makeStartErrorAction({ ...request, error: 'no api name is specified' }));
+      return;
+    }
+    if (typeof request.endpoint !== 'string') {
+      dispatch(makeStartErrorAction({ ...request, error: 'no api endpoint is specified' }));
       return;
     }
 
-    dispatch(makeStartAction(request)());
+    dispatch(makeStartAction(request));
 
     try {
       const response = await finalAdapter(request);
       if (response) {
-        dispatch(makeSuccessAction(request)(response.payload, response.meta));
+        dispatch(makeSuccessAction(request, response));
       }
     } catch (failure) {
-      dispatch(makeFailureAction(request)(failure.payload, failure.meta));
+      dispatch(makeFailureAction(request, failure));
     }
   };
 };

@@ -35,7 +35,7 @@ describe('reducer', () => {
         name: 'SAMPLE',
         endpoint: 'http://example.com'
       };
-      return reducer(state, makeStartAction(api)());
+      return reducer(state, makeStartAction(api));
     };
 
     it('should set isFetching to true', () => {
@@ -79,7 +79,7 @@ describe('reducer', () => {
         requestedAt: time,
       };
       const error = { message: 'some new error' }
-      return reducer(state, makeStartErrorAction(api)(error));
+      return reducer(state, makeStartErrorAction({ ...api, error }));
     };
 
     it('should set isFetching to false', () => {
@@ -120,9 +120,11 @@ describe('reducer', () => {
         name: 'SAMPLE',
         endpoint: 'http://example.com',
       };
-      const json = { key: 'new_value' };
-      const headers = { header: 'value' };
-      return reducer(state, makeSuccessAction(api)(json, headers));
+      const resp = {
+        payload: { key: 'new_value' },
+        meta: { header: 'value' },
+      }
+      return reducer(state, makeSuccessAction(api, resp));
     };
 
     it('should set isFetching to false', () => {
@@ -168,9 +170,11 @@ describe('reducer', () => {
         name: 'SAMPLE',
         endpoint: 'http://example.com',
       };
-      const json = { error: 'new error' };
-      const headers = { header: 'new header' };
-      return reducer(state, makeFailureAction(api)(json, headers));
+      const resp = {
+        payload: { error: 'new error' },
+        meta: { header: 'new header' },
+      };
+      return reducer(state, makeFailureAction(api, resp));
     };
 
     it('should set isFetching to false', () => {

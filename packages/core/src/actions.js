@@ -2,19 +2,16 @@ import {
   CALL_API,
   ACTION_FETCH_START,
   ACTION_FETCH_COMPLETE,
-  ACTION_FETCH_FAILURE
+  ACTION_FETCH_FAILURE,
 } from './constants';
 
-export const makeStartErrorAction = api => (error) => ({
+export const makeStartErrorAction = payload => ({
   type: ACTION_FETCH_START,
   error: true,
-  payload: {
-    error,
-    ...api,
-  },
+  payload,
 });
 
-export const makeStartAction = api => () => ({
+export const makeStartAction = api => ({
   type: ACTION_FETCH_START,
   payload: {
     ...api,
@@ -22,7 +19,7 @@ export const makeStartAction = api => () => ({
   },
 });
 
-export const makeSuccessAction = api => (payload, meta) => ({
+export const makeSuccessAction = (api, { payload, meta }) => ({
   type: ACTION_FETCH_COMPLETE,
   payload: {
     ...api,
@@ -32,7 +29,7 @@ export const makeSuccessAction = api => (payload, meta) => ({
   meta,
 });
 
-export const makeFailureAction = api => (payload, meta) => ({
+export const makeFailureAction = (api, { payload, meta }) => ({
   type: ACTION_FETCH_FAILURE,
   payload: {
     ...api,
