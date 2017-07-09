@@ -1,5 +1,3 @@
-import { stub } from 'sinon';
-import { expect } from 'chai';
 import { constant } from 'lodash';
 import makeFetchAction from '../makeFetchAction';
 
@@ -14,27 +12,27 @@ describe('makeFetchAction', () => {
     });
 
     it('should return actionCreator function', () => {
-      expect(actual).to.have.property('actionCreator').to.be.an.instanceOf(Function);
+      expect(actual.actionCreator).toBeInstanceOf(Function);
     });
 
     it('should return isFetchingSelector function', () => {
-      expect(actual).to.have.property('isFetchingSelector').to.be.an.instanceOf(Function);
+      expect(actual.isFetchingSelector).toBeInstanceOf(Function);
     });
 
     it('should return dataSelector function', () => {
-      expect(actual).to.have.property('dataSelector').to.be.an.instanceOf(Function);
+      expect(actual.dataSelector).toBeInstanceOf(Function);
     });
 
     it('should return errorSelector function', () => {
-      expect(actual).to.have.property('errorSelector').to.be.an.instanceOf(Function);
+      expect(actual.errorSelector).toBeInstanceOf(Function);
     });
 
     it('should return lastResponseSelector function', () => {
-      expect(actual).to.have.property('lastResponseSelector').to.be.an.instanceOf(Function);
+      expect(actual.lastResponseSelector).toBeInstanceOf(Function);
     });
 
     it('should return isInvalidatedSelector function', () => {
-      expect(actual).to.have.property('isInvalidatedSelector').to.be.an.instanceOf(Function);
+      expect(actual.isInvalidatedSelector).toBeInstanceOf(Function);
     });
 
     describe('resetter', () => {
@@ -55,7 +53,7 @@ describe('makeFetchAction', () => {
             ],
           },
         }
-        expect(actualValue).to.deep.equal(expectedValue);
+        expect(actualValue).toEqual(expectedValue);
       });
 
       it('should return array of 1 string if param is string', () => {
@@ -70,14 +68,14 @@ describe('makeFetchAction', () => {
             ],
           },
         }
-        expect(actualValue).to.deep.equal(expectedValue);
+        expect(actualValue).toEqual(expectedValue);
       });
 
       it('should throw if resetter is called with non-string or non-array value', () => {
         const resetter = actual.resetter;
         expect(
           () => resetter(1)
-        ).to.throw();
+        ).toThrow();
       });
 
       it('should return array of multiple fields if param is array', () => {
@@ -93,7 +91,7 @@ describe('makeFetchAction', () => {
             ],
           },
         }
-        expect(actualValue).to.deep.equal(expectedValue);
+        expect(actualValue).toEqual(expectedValue);
       });
 
     });
@@ -107,7 +105,7 @@ describe('makeFetchAction', () => {
                 isFetching: true
               }
             }
-          })).to.equal(true);
+          })).toBe(true);
 
           expect(actual.isFetchingSelector({
             api_calls: {
@@ -115,11 +113,11 @@ describe('makeFetchAction', () => {
                 isFetching: false
               }
             }
-          })).to.equal(false);
+          })).toBe(false);
         });
 
         it('should return false if api was not called', () => {
-          expect(actual.isFetchingSelector({})).to.equal(false);
+          expect(actual.isFetchingSelector({})).toBe(false);
         });
       });
 
@@ -131,7 +129,7 @@ describe('makeFetchAction', () => {
                 isInvalidated: true
               }
             }
-          })).to.equal(true);
+          })).toBe(true);
 
           expect(actual.isInvalidatedSelector({
             api_calls: {
@@ -139,11 +137,11 @@ describe('makeFetchAction', () => {
                 isInvalidated: false
               }
             }
-          })).to.equal(false);
+          })).toBe(false);
         });
 
         it('should return false if api was not called', () => {
-          expect(actual.isInvalidatedSelector({})).to.equal(false);
+          expect(actual.isInvalidatedSelector({})).toBe(false);
         });
       });
 
@@ -156,11 +154,11 @@ describe('makeFetchAction', () => {
                 data
               }
             }
-          })).to.equal(data);
+          })).toBe(data);
         });
 
         it('should return null if api was not called', () => {
-          expect(actual.dataSelector({})).to.equal(null);
+          expect(actual.dataSelector({})).toBe(null);
         });
       });
 
@@ -173,11 +171,11 @@ describe('makeFetchAction', () => {
                 error
               }
             }
-          })).to.equal(error);
+          })).toBe(error);
         });
 
         it('should return null if api was not called', () => {
-          expect(actual.errorSelector({})).to.equal(null);
+          expect(actual.errorSelector({})).toBe(null);
         });
       });
 
@@ -190,11 +188,11 @@ describe('makeFetchAction', () => {
                 lastResponse: 12345
               }
             }
-          })).to.equal(lastResponse);
+          })).toBe(lastResponse);
         });
 
         it('should return null if api was not called', () => {
-          expect(actual.lastResponseSelector({})).to.equal(null);
+          expect(actual.lastResponseSelector({})).toBe(null);
         });
       });
 
