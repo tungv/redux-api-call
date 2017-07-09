@@ -1,7 +1,7 @@
 {
-  "name": "redux-api-call-adapter-fetch",
+  "name": "redux-api-call-adapter-dedupe",
   "version": "1.0.0-17",
-  "description": "redux-api-call (npm.im/redux-api-call) adapter to fetch data using HTML5 Fetch API",
+  "description": "redux-api-call (npm.im/redux-api-call) adapter to dedupe similar request\"",
   "main": ".build/index.js",
   "repository": "tungv/redux-api-call",
   "author": "Tung Vu <me@tungv.com>",

@@ -46,7 +46,7 @@ describe('default middleware', () => {
     });
   };
 
-  context('rejected fetch requests', () => {
+  describe('rejected fetch requests', () => {
     beforeEach(() => {
       fetchMock.mock('http://localhost:3000/api/test', {
         throws: new Error('timeout')
@@ -67,7 +67,7 @@ describe('default middleware', () => {
     });
   })
 
-  context('dispatching start action', () => {
+  describe('dispatching start action', () => {
     beforeEach(() => {
       fetchMock.mock('http://localhost:3000/api/test', { everything: 'ok' });
     });
@@ -152,7 +152,7 @@ describe('default middleware', () => {
 
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  context('multiple api calls', () => {
+  describe('multiple api calls', () => {
     it('should not drop pending request when there is a new one', async () => {
       const store = getStore();
 
@@ -227,7 +227,7 @@ describe('default middleware', () => {
     });
   });
 
-  context('dispatching complete action', () => {
+  describe('dispatching complete action', () => {
     it('should dispatch FETCH_COMPLETE with a json object', async () => {
       const store = getStore();
       const mockSpy = jest.fn();
@@ -256,6 +256,7 @@ describe('default middleware', () => {
             everything: 'ok'
           }
         },
+        meta: {}
       });
     });
 
@@ -280,11 +281,63 @@ describe('default middleware', () => {
           respondedAt: NOW,
           json: 'string',
         },
+        meta: {}
+      });
+    });
+
+    it('should dispatch FETCH_COMPLETE with a normalized meta object', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', { body: 'string', headers: { 'X-CHECKSUM': 'value' } });
+
+      store.dispatch({
+        [CALL_API]: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+
+      const [_, complete] = await takeActionsUntil(store, 2);
+
+      expect(complete).toEqual({
+        type: ACTION_FETCH_COMPLETE,
+        payload: {
+          name: 'TEST_API',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          json: 'string',
+        },
+        meta: {
+          'x-checksum': 'value'
+        }
       });
     });
   });
 
-  context('dispatching failure action', () => {
+  describe('dispatching failure action', () => {
+    it('should dispatch FETCH_FAILURE when fetch throw an error', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', {
+        throws: new Error('fetch failed'),
+      });
+      store.dispatch({
+        [CALL_API]: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+      const [_, failure] = await takeActionsUntil(store, 2);
+      expect(failure).toEqual({
+        type: ACTION_FETCH_FAILURE,
+        meta: {},
+        payload: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          json: new Error('fetch failed'),
+        },
+      });
+    });
+
     it('should dispatch FETCH_FAILURE with a json object', async () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: { msg: 'ERRRRR!' }});
@@ -306,6 +359,7 @@ describe('default middleware', () => {
             msg: 'ERRRRR!',
           }
         },
+        meta: {}
       })
     });
 
@@ -322,11 +376,37 @@ describe('default middleware', () => {
       const [_, failure] = await takeActionsUntil(store, 2);
       expect(failure).toEqual({
         type: ACTION_FETCH_FAILURE,
+        meta: {},
         payload: {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
           json: 'just a message',
+        },
+      });
+    });
+
+    it('should dispatch FETCH_FAILURE with a normalized meta object', async () => {
+      const store = getStore();
+      fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: 'just a message', headers: { 'X-SERVER': 'Express' } });
+      store.dispatch({
+        [CALL_API]: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+        }
+      });
+
+      const [_, failure] = await takeActionsUntil(store, 2);
+      expect(failure).toEqual({
+        type: ACTION_FETCH_FAILURE,
+        payload: {
+          name: 'ITS_NOT_MY_FAULT',
+          endpoint: 'http://localhost:3000/api/test',
+          respondedAt: NOW,
+          json: 'just a message',
+        },
+        meta: {
+          'x-server': 'Express'
         },
       });
     });

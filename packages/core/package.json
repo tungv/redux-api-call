@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call",
-  "version": "1.0.0-9",
+  "version": "1.0.0-17",
   "license": "MIT",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
@@ -16,7 +16,7 @@
   "jest": {
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(js)$",
     "setupFiles": [
-      "node_modules/isomorphic-fetch/fetch-npm-node.js"
+      "isomorphic-fetch/fetch-npm-node.js"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -41,7 +41,7 @@
   "main": ".build/index.js",
   "devDependencies": {
     "babel-core": "^6.14.0",
-    "babel-jest": "^16.0.0",
+    "babel-jest": "^20.0.0",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-transform-function-bind": "^6.8.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
@@ -55,8 +55,7 @@
     "chai": "^3.5.0",
     "fetch-mock": "^5.5.0",
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^19.0.2",
-    "jest-cli": "^16.0.1",
+    "jest-cli": "^20.0.1",
     "lodash": "^4.16.1",
     "redux": "^3.6.0",
     "redux-mock-store": "^1.2.0",
@@ -69,17 +68,17 @@
     "rollup-plugin-strip": "^1.1.1",
     "rollup-plugin-stub": "^1.1.0",
     "rollup-plugin-uglify": "^1.0.1",
-    "rxjs": "^5.0.0-rc.2",
+    "rxjs": "^5.4.2",
     "sinon": "^1.17.6",
     "source-map-support": "^0.4.2",
     "timekeeper": "^0.1.1"
   },
   "dependencies": {
-    "redux-api-call-adapter-fetch": "^1.0.0-9",
-    "redux-api-call-adapter-json": "^1.0.0-9"
+    "redux-api-call-adapter-dedupe": "^1.0.0-17",
+    "redux-api-call-adapter-fetch": "^1.0.0-17",
+    "redux-api-call-adapter-json": "^1.0.0-13"
   },
   "peerDependencies": {
-    "redux": "^3.6.0",
-    "rxjs": "^5.0.0-rc.1"
+    "redux": "^3.6.0"
   }
 }
