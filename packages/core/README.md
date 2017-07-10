@@ -20,19 +20,16 @@ One declarative API to create reducers, action creators and selectors for <del>J
 ```js
 // EXAMPLE 1
 // this will create data selector and action creator for your components to use
-const TODO_LIST_API = makeFetchAction(
+const todoListAPI = makeFetchAction(
   'TODO_LIST',
-  ({ page, limit }) => ({
-    endpoint: `/api/v1/todos?page=${page}&limit=${limit}`,
-    method: 'GET',
-  })
+  (params) => ({ endpoint: `/api/v1/todos?page=${params.page}&limit=${params.limit}` })
 );
 
 // trigger fetch action
-store.dispatch(TODO_LIST_API.actionCreator({ page: 1, limit: 10 });
+store.dispatch(todoListAPI.actionCreator({ page: 1, limit: 10 });
 
 // get the data
-const todos = TODO_LIST_API.dataSelector(store.getState());
+const todos = todoListAPI.dataSelector(store.getState());
 
 // you can also use destructuring syntax for better readability
 const { actionCreator: fetchTodos, dataSelector: todosSelector } = makeFetchAction(/* ... */);
@@ -100,9 +97,9 @@ import { makeFetchAction } from 'redux-api-call'
 import { createSelector } from 'reselect'
 import { flow, get, filter } from 'lodash/fp'
 
-export const FETCH_TODOS_API = makeFetchAction('FETCH_TODOS', () => ({ endpoint: '/api/v1/todos' });
+export const todoAPI = makeFetchAction('FETCH_TODOS', () => ({ endpoint: '/api/v1/todos' });
 
-export const todosSelector = flow(FETCH_TODOS_API.dataSelector, get('todos'));
+export const todosSelector = flow(todoAPI.dataSelector, get('todos'));
 export const completeTodosSelector = createSelector(todosSelector, filter(todo => todo.complete));
 export const incompleteTodosSelector = createSelector(todosSelector, filter(todo => !todo.complete));
 
@@ -115,7 +112,7 @@ The following code is an example of using redux-api-call and react-redux
 // component.jsx
 import react from 'react'
 import { connect } from 'react-redux'
-import { FETCH_TODOS_API } from './state'
+import { todoAPI } from './state'
 
 // destructuring for better readability
 const {
@@ -125,7 +122,7 @@ const {
   incompleteTodosSelector,
   errorSelector,
   lastResponseSelector,
-} = FETCH_TODOS_API;
+} = todoAPI;
 
 const connectToRedux = connect(
   state => ({
