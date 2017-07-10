@@ -3,6 +3,7 @@ import makeFetchAction from './makeFetchAction';
 import composeAdapters from './composeAdapters';
 import fetch from 'redux-api-call-adapter-fetch';
 import json from 'redux-api-call-adapter-json';
+import dedupe from 'redux-api-call-adapter-dedupe';
 
 import {
   REDUCER_PATH,
@@ -21,6 +22,6 @@ const ACTIONS = {
   UPDATE_LOCAL: ACTION_UPDATE_LOCAL,
 };
 
-export const defaultTransformers = [json, fetch];
+export const defaultTransformers = [dedupe, json, fetch];
 
 export { middleware, makeFetchAction, reducers, ACTIONS, composeAdapters, createAPIMiddleware };
