@@ -1,6 +1,4 @@
 import babel from 'rollup-plugin-babel';
-import strip from 'rollup-plugin-strip';
-import uglify from 'rollup-plugin-uglify';
 import cleanup from 'rollup-plugin-cleanup';
 
 export default {
@@ -10,9 +8,10 @@ export default {
   plugins: [
     babel({
       babelrc: false,
-      presets: ['stage-1', ['es2015', { modules: false }], 'es2016'],
-      plugins: ['external-helpers', 'transform-function-bind']
+      presets: ['stage-3', ['env', { modules: false, targets: { browsers: ['last 2 versions', 'IE >= 10'] } }]],
+      plugins: ['transform-runtime'],
+      runtimeHelpers: true,
     }),
     cleanup({ maxEmptyLines: 1 }),
-  ]
+  ],
 };
