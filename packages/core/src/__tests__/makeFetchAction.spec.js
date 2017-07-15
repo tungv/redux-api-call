@@ -1,7 +1,7 @@
 import { constant } from 'lodash';
 import timekeeper from 'timekeeper';
 
-import { ACTION_FETCH_START, CALL_API } from '../constants';
+import { ACTION_FETCH_START } from '../constants';
 import makeFetchAction from '../makeFetchAction';
 
 const NOW = 1478329954380;

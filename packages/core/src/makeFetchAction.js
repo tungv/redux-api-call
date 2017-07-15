@@ -2,7 +2,6 @@ import {
   ACTION_FETCH_START,
   ACTION_RESET_LOCAL,
   ACTION_UPDATE_LOCAL,
-  CALL_API,
   REDUCER_PATH,
 } from './constants';
 import get from './utils/get';

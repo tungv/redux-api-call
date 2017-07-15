@@ -2,10 +2,9 @@ import dedupe from 'redux-api-call-adapter-dedupe';
 import fetch from 'redux-api-call-adapter-fetch';
 import parseJSON from 'redux-api-call-adapter-json';
 
-import { ACTION_FETCH_START, CALL_API } from './constants';
+import { ACTION_FETCH_START } from './constants';
 import {
   makeFailureAction,
-  makeStartAction,
   makeStartErrorAction,
   makeSuccessAction,
 } from './actions';

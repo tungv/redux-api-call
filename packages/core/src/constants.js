@@ -1,4 +1,3 @@
-export const CALL_API = '@@redux-api-call/CALL_API';
 export const REDUCER_PATH = 'api_calls';
 export const ACTION_FETCH_START = '@@api/FETCH_START';
 export const ACTION_FETCH_COMPLETE = '@@api/FETCH_COMPLETE';

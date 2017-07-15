@@ -1,4 +1,4 @@
-import { ACTION_FETCH_START, CALL_API } from '../constants';
+import { ACTION_FETCH_START } from '../constants';
 import { createAPIMiddleware } from '../middleware';
 
 describe('createAPIMiddleware()', () => {

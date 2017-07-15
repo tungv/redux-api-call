@@ -1,17 +1,13 @@
 import configureStore from 'redux-mock-store';
-import timekeeper from 'timekeeper';
 import fetchMock from 'fetch-mock';
+import timekeeper from 'timekeeper';
+
 import {
-  CALL_API,
   ACTION_FETCH_COMPLETE,
   ACTION_FETCH_FAILURE,
   ACTION_FETCH_START,
 } from '../constants';
 import middleware from '../middleware';
-import {
-  Observable
-} from 'rxjs';
-import { map } from 'rxjs/operator/map';
 
 const NOW = 1478329954380;
 
