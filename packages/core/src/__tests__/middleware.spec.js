@@ -56,7 +56,9 @@ describe('default middleware', () => {
     it('should dispatch FETCH_FAILURE', async () => {
       const store = getStore();
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -75,7 +77,9 @@ describe('default middleware', () => {
     it('should dispatch FETCH_START action immediately', () => {
       const store = getStore();
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -86,6 +90,7 @@ describe('default middleware', () => {
       expect(actions[0]).toEqual({
         type: ACTION_FETCH_START,
         payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
           requestedAt: NOW,
@@ -100,7 +105,9 @@ describe('default middleware', () => {
       const bodySelector = jest.fn();
 
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: endpointSelector,
           headers: headersSelector,
@@ -116,7 +123,9 @@ describe('default middleware', () => {
     it('should dispatch FETCH_START with error=true when name is not a string', () => {
       const store = getStore();
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: {},
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -128,7 +137,9 @@ describe('default middleware', () => {
     xit('should dispatch FETCH_START with error=true when name is an empty string', () => {
       const store = getStore();
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: '',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -140,7 +151,9 @@ describe('default middleware', () => {
     it('should dispatch FETCH_START with error=true when endpoint is not a string or a function', () => {
       const store = getStore();
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: {},
         }
@@ -166,13 +179,17 @@ describe('default middleware', () => {
       );
 
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API_30',
           endpoint: 'http://localhost:3000/api/test/1',
         }
       });
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API_10',
           endpoint: 'http://localhost:3000/api/test/2',
         }
@@ -203,13 +220,17 @@ describe('default middleware', () => {
       );
 
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test/1',
         }
       });
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test/2',
         }
@@ -237,7 +258,9 @@ describe('default middleware', () => {
       });
 
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -252,6 +275,7 @@ describe('default middleware', () => {
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: {
             everything: 'ok'
           }
@@ -265,7 +289,9 @@ describe('default middleware', () => {
       fetchMock.mock('http://localhost:3000/api/test', { body: 'string' });
 
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -279,6 +305,7 @@ describe('default middleware', () => {
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: 'string',
         },
         meta: {}
@@ -290,7 +317,9 @@ describe('default middleware', () => {
       fetchMock.mock('http://localhost:3000/api/test', { body: 'string', headers: { 'X-CHECKSUM': 'value' } });
 
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -304,6 +333,7 @@ describe('default middleware', () => {
           name: 'TEST_API',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: 'string',
         },
         meta: {
@@ -320,7 +350,9 @@ describe('default middleware', () => {
         throws: new Error('fetch failed'),
       });
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -333,6 +365,7 @@ describe('default middleware', () => {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: new Error('fetch failed'),
         },
       });
@@ -342,7 +375,9 @@ describe('default middleware', () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: { msg: 'ERRRRR!' }});
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -355,6 +390,7 @@ describe('default middleware', () => {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: {
             msg: 'ERRRRR!',
           }
@@ -367,7 +403,9 @@ describe('default middleware', () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: 'just a message' });
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -381,6 +419,7 @@ describe('default middleware', () => {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: 'just a message',
         },
       });
@@ -390,7 +429,9 @@ describe('default middleware', () => {
       const store = getStore();
       fetchMock.mock('http://localhost:3000/api/test', { status: 404, body: 'just a message', headers: { 'X-SERVER': 'Express' } });
       store.dispatch({
-        [CALL_API]: {
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
         }
@@ -403,6 +444,7 @@ describe('default middleware', () => {
           name: 'ITS_NOT_MY_FAULT',
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
+          requestedAt: NOW,
           json: 'just a message',
         },
         meta: {

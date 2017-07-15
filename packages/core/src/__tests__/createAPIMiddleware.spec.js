@@ -1,5 +1,5 @@
+import { ACTION_FETCH_START, CALL_API } from '../constants';
 import { createAPIMiddleware } from '../middleware';
-import { CALL_API } from '../constants';
 
 describe('createAPIMiddleware()', () => {
   it('should take an adapter and return a middleware', () => {
@@ -16,19 +16,21 @@ describe('createAPIMiddleware()', () => {
     const next = jest.fn();
     const api = {
       name: 'TEST',
-      endpoint: 'test'
+      endpoint: 'test',
+      requestedAt: 1478329954380
     };
     const action = {
-      [CALL_API]: api
+      type: ACTION_FETCH_START,
+      payload: api
     }
 
     middleware(store)(next)(action);
 
     expect(adapter).toBeCalledWith(store.getState);
     expect(fetcher).toBeCalledWith(api);
-    expect(next).not.toBeCalled();
+    expect(store.dispatch).not.toBeCalled();
 
-    const firstAction = store.dispatch.mock.calls[0][0];
+    const firstAction = next.mock.calls[0][0];
 
     expect(firstAction.type).toBe('@@api/FETCH_START');
   });
