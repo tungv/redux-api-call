@@ -29,6 +29,15 @@ function validate(request) {
   return false;
 }
 
+async function tryRequest(request, adapter) {
+  try {
+    const response = await adapter(request);
+    return makeSuccessAction(request, response);
+  } catch (failure) {
+    return makeFailureAction(request, failure);
+  }
+}
+
 export function createAPIMiddleware(adapter) {
   return ({ dispatch, getState }) => {
     const finalAdapter = adapter(getState);
@@ -37,7 +46,7 @@ export function createAPIMiddleware(adapter) {
     return next => async action => {
       let request;
       if (action.type === ACTION_FETCH_START) {
-        request = resolveState(action.payload)
+        request = resolveState(action.payload);
 
         const errorAction = validate(request);
         if (errorAction) {
@@ -48,14 +57,9 @@ export function createAPIMiddleware(adapter) {
 
       next(action);
 
-      if (action.type === ACTION_FETCH_START) {
-        try {
-          const response = await finalAdapter(request);
-          dispatch(makeSuccessAction(request, response));
-        } catch (failure) {
-          dispatch(makeFailureAction(request, failure));
-        }
-      }
+      if (action.type !== ACTION_FETCH_START) return;
+
+      dispatch(await tryRequest(request, finalAdapter));
     };
   };
 }
