@@ -1,12 +1,19 @@
 import { constant } from 'lodash';
+import timekeeper from 'timekeeper';
 
-import { CALL_API } from '../constants';
+import { ACTION_FETCH_START } from '../constants';
 import makeFetchAction from '../makeFetchAction';
+
+const NOW = 1478329954380;
 
 describe('makeFetchAction', () => {
   describe('no custom selectors', () => {
     let actual;
     let configFn;
+
+    beforeAll(() => {
+      timekeeper.freeze(NOW);
+    });
 
     beforeAll(() => {
       configFn = jest.fn(constant({ endpoint: 'http://example.com' }));
@@ -42,9 +49,13 @@ describe('makeFetchAction', () => {
         const params = [1, 2, 3];
         const action = actual.actionCreator(...params);
         expect(configFn).toBeCalledWith(...params);
-        expect(action[CALL_API]).toEqual({
-          name: 'SAMPLE',
-          endpoint: 'http://example.com',
+        expect(action).toEqual({
+          type: ACTION_FETCH_START,
+          payload: {
+            name: 'SAMPLE',
+            endpoint: 'http://example.com',
+            requestedAt: 1478329954380,
+          },
         });
       });
     });

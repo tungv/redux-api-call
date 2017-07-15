@@ -1,10 +1,10 @@
-import get from './utils/get';
 import {
-  CALL_API,
-  REDUCER_PATH,
-  ACTION_UPDATE_LOCAL,
+  ACTION_FETCH_START,
   ACTION_RESET_LOCAL,
+  ACTION_UPDATE_LOCAL,
+  REDUCER_PATH,
 } from './constants';
+import get from './utils/get';
 
 const normalizeResetData = (data = [
   'lastRequest',
@@ -25,9 +25,11 @@ const normalizeResetData = (data = [
 
 export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   const actionCreator = (...params) => ({
-    [CALL_API]: {
+    type: ACTION_FETCH_START,
+    payload: {
       ...apiConfigFn(...params),
       name: apiName,
+      requestedAt: Date.now(),
     },
   });
 
