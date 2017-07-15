@@ -38,7 +38,8 @@
       "__tests__"
     ]
   },
-  "main": ".build/index.js",
+  "main": "dist/redux-api-call.cjs.js",
+  "module": "dist/redux-api-call.es.js",
   "devDependencies": {
     "babel-core": "^6.14.0",
     "babel-jest": "^20.0.0",

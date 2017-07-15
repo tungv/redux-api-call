@@ -3,8 +3,10 @@ import cleanup from 'rollup-plugin-cleanup';
 
 export default {
   entry: 'src/index.js',
-  dest: '.build/index.js',
-  format: 'cjs',
+  targets: [
+    { dest: 'dist/redux-api-call.cjs.js', format: 'cjs' },
+    { dest: 'dist/redux-api-call.es.js', format: 'es' },
+  ],
   plugins: [
     babel({
       babelrc: false,
