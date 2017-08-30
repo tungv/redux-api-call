@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/dm/redux-api-call.svg)](npm.im/redux-api-call) [![CircleCI](https://circleci.com/gh/tungv/redux-api-call.svg?style=svg)](https://circleci.com/gh/tungv/redux-api-call) [![codebeat badge](https://codebeat.co/badges/a3c54dda-3816-4763-9041-32fff411c4a8)](https://codebeat.co/projects/github-com-tungv-redux-api-call-master)
+[![npm](https://img.shields.io/npm/dm/redux-api-call.svg)](https://npm.im/redux-api-call) [![CircleCI](https://circleci.com/gh/tungv/redux-api-call.svg?style=svg)](https://circleci.com/gh/tungv/redux-api-call) [![codebeat badge](https://codebeat.co/badges/a3c54dda-3816-4763-9041-32fff411c4a8)](https://codebeat.co/projects/github-com-tungv-redux-api-call-master)
 
 
 # redux-api-call
