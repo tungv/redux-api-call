@@ -55,7 +55,11 @@ export function createAPIMiddleware(adapter) {
         }
       }
 
-      next(action);
+      if (request) {
+        next({ ...action, payload: request });
+      } else {
+        next(action);
+      }
 
       if (action.type !== ACTION_FETCH_START) return;
 
