@@ -1,6 +1,6 @@
 {
   "name": "redux-api-call",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "MIT",
   "description": "Redux utilities for making API calls",
   "repository": "https://github.com/tungv/redux-api-call.git",
@@ -38,6 +38,9 @@
       "__tests__"
     ]
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/redux-api-call.cjs.js",
   "module": "dist/redux-api-call.es.js",
   "devDependencies": {
