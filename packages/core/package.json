@@ -85,6 +85,6 @@
     "redux-api-call-adapter-json": "^1.0.0"
   },
   "peerDependencies": {
-    "redux": "^3.6.0"
+    "redux": "^3.6.0 || ^4.0.0"
   }
 }
