@@ -27,7 +27,7 @@ const todoListAPI = makeFetchAction(
 );
 
 // trigger fetch action
-store.dispatch(todoListAPI.actionCreator({ page: 1, limit: 10 });
+store.dispatch(todoListAPI.actionCreator({ page: 1, limit: 10 }));
 
 // get the data
 const todos = todoListAPI.dataSelector(store.getState());

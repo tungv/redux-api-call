@@ -1,7 +1,7 @@
-[![npm](https://img.shields.io/npm/dm/redux-api-call.svg)](https://npm.im/redux-api-call) [![CircleCI](https://circleci.com/gh/tungv/redux-api-call.svg?style=svg)](https://circleci.com/gh/tungv/redux-api-call) [![codebeat badge](https://codebeat.co/badges/a3c54dda-3816-4763-9041-32fff411c4a8)](https://codebeat.co/projects/github-com-tungv-redux-api-call-master)
-
+[![npm](https://img.shields.io/npm/dm/redux-api-call.svg)](https://npm.im/redux-api-call) [![codebeat badge](https://codebeat.co/badges/a3c54dda-3816-4763-9041-32fff411c4a8)](https://codebeat.co/projects/github-com-tungv-redux-api-call-master)
 
 # redux-api-call
+
 Redux utilities for API calls using fetch with automatic race-conditions elimination.
 
 ```
@@ -13,6 +13,7 @@ npm i -S redux-api-call
 [**Migration from v0 to v1**](https://github.com/tungv/redux-api-call/wiki/Migration-to-V1)
 
 # The goals
+
 One declarative API to create reducers, action creators and selectors for <del>JSON</del> any API calls
 
 # Examples
@@ -48,10 +49,10 @@ store.dispatch(fetchTodos({ page: 4 });
 
 Steps:
 
-1. install
-2. add reducer
-3. add middleware
-4. declare api definitions
+1.  install
+2.  add reducer
+3.  add middleware
+4.  declare api definitions
 
 First, you need to install the redux-api-call using npm or yarn
 
@@ -65,25 +66,24 @@ yarn add redux-api-call
 Secondly, you need to add a reducer to your root reducer with a pathname is `api_calls` (In next releases, this name should be configurable, but for now, just use it)
 
 ```js
-
 // rootReducer.js
-import { combineReducers } from 'redux'
-import { reducers as apiReducers } from 'redux-api-call'
+import { combineReducers } from 'redux';
+import { reducers as apiReducers } from 'redux-api-call';
 
 const rootReducer = combineReducers({
-  ...apiReducers
-})
+  ...apiReducers,
+});
 ```
 
 Then please import middleware from redux-api-call and put it to your redux middleware stack
 
 ```js
 // configStore.js
-import { createStore, applyMiddleware } from 'redux'
-import { middleware as apiMiddleware } from 'redux-api-call'
+import { createStore, applyMiddleware } from 'redux';
+import { middleware as apiMiddleware } from 'redux-api-call';
 
 const middlewares = applyMiddleware(
-  apiMiddleware,
+  apiMiddleware
   // ... other middlewares (thunk, promise, etc.)
 );
 const store = createStore(rootReducer, {}, middlewares);
@@ -102,17 +102,17 @@ export const todoAPI = makeFetchAction('FETCH_TODOS', () => ({ endpoint: '/api/v
 export const todosSelector = flow(todoAPI.dataSelector, get('todos'));
 export const completeTodosSelector = createSelector(todosSelector, filter(todo => todo.complete));
 export const incompleteTodosSelector = createSelector(todosSelector, filter(todo => !todo.complete));
-
 ```
+
 And that's it. Now you have a bunch of action creators and selectors. You can use them anywhere you want.
 The following code is an example of using redux-api-call and react-redux
 
 ```js
 // example usage with react
 // component.jsx
-import react from 'react'
-import { connect } from 'react-redux'
-import { todoAPI } from './state'
+import react from 'react';
+import { connect } from 'react-redux';
+import { todoAPI } from './state';
 
 // destructuring for better readability
 const {
@@ -131,7 +131,8 @@ const connectToRedux = connect(
     completeTodos: completeTodosSelector(state),
     incompleteTodos: incompleteTodosSelector(state),
     lastResponse: lastResponseSelector(state),
-  }), {
+  }),
+  {
     fetchTodos,
   }
 );
@@ -145,11 +146,7 @@ class TodosComponent extends React.Component {
   render() {
     const { loading, error, completeTodos, incompleteTodos } = this.props;
 
-    return (
-      <div>
-        {/* ... your markup ...*/}
-      </div>
-    )
+    return <div>{/* ... your markup ...*/}</div>;
   }
 }
 
