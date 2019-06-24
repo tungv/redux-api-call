@@ -18,7 +18,7 @@ export default next => async ({ endpoint, ...others }) => {
 
   if (!resp.ok) {
     const error = new Error('Bad Response');
-    error.statusCode = resp.statusCode;
+    error.statusCode = resp.status;
     error.payload = await resp.text();
     error.meta = meta;
     throw error;

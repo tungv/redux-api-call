@@ -28,11 +28,12 @@ export const makeSuccessAction = (api, { payload, meta }) => ({
   meta,
 });
 
-export const makeFailureAction = (api, { payload, meta }) => ({
+export const makeFailureAction = (api, { payload, meta, statusCode }) => ({
   type: ACTION_FETCH_FAILURE,
   payload: {
     ...api,
     json: payload,
+    statusCode,
     respondedAt: Date.now(),
   },
   meta,

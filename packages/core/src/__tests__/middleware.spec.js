@@ -141,22 +141,19 @@ describe('default middleware', () => {
       expect(store.getActions()[0].error).toBeTruthy();
     });
 
-    xit(
-      'should dispatch FETCH_START with error=true when name is an empty string',
-      () => {
-        const store = getStore();
-        store.dispatch({
-          type: ACTION_FETCH_START,
-          payload: {
-            requestedAt: 1478329954380,
-            name: '',
-            endpoint: 'http://localhost:3000/api/test',
-          },
-        });
+    xit('should dispatch FETCH_START with error=true when name is an empty string', () => {
+      const store = getStore();
+      store.dispatch({
+        type: ACTION_FETCH_START,
+        payload: {
+          requestedAt: 1478329954380,
+          name: '',
+          endpoint: 'http://localhost:3000/api/test',
+        },
+      });
 
-        expect(store.getActions()[0].error).toBeTruthy();
-      }
-    );
+      expect(store.getActions()[0].error).toBeTruthy();
+    });
 
     it('should dispatch FETCH_START with error=true when endpoint is not a string or a function', () => {
       const store = getStore();
@@ -181,11 +178,11 @@ describe('default middleware', () => {
 
       fetchMock.mock(
         'http://localhost:3000/api/test/1',
-        delay(30).then(() => ({ body: { timer: '30' } }))
+        delay(30).then(() => ({ body: { timer: '30' } })),
       );
       fetchMock.mock(
         'http://localhost:3000/api/test/2',
-        delay(10).then(() => ({ body: { timer: '10' } }))
+        delay(10).then(() => ({ body: { timer: '10' } })),
       );
 
       store.dispatch({
@@ -207,7 +204,7 @@ describe('default middleware', () => {
 
       const [start30, start10, complete10, complete30] = await takeActionsUntil(
         store,
-        4
+        4,
       );
 
       expect(start30.type).toBe(ACTION_FETCH_START);
@@ -225,11 +222,11 @@ describe('default middleware', () => {
 
       fetchMock.mock(
         'http://localhost:3000/api/test/1',
-        delay(30).then(() => ({ body: { timer: '30' } }))
+        delay(30).then(() => ({ body: { timer: '30' } })),
       );
       fetchMock.mock(
         'http://localhost:3000/api/test/2',
-        delay(10).then(() => ({ body: { timer: '10' } }))
+        delay(10).then(() => ({ body: { timer: '10' } })),
       );
 
       store.dispatch({
@@ -413,6 +410,7 @@ describe('default middleware', () => {
           json: {
             msg: 'ERRRRR!',
           },
+          statusCode: 404,
         },
         meta: {},
       });
@@ -429,6 +427,7 @@ describe('default middleware', () => {
         payload: {
           requestedAt: 1478329954380,
           name: 'ITS_NOT_MY_FAULT',
+          statusCode: 404,
           endpoint: 'http://localhost:3000/api/test',
         },
       });
@@ -442,6 +441,7 @@ describe('default middleware', () => {
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
           requestedAt: NOW,
+          statusCode: 404,
           json: 'just a message',
         },
       });
@@ -471,6 +471,7 @@ describe('default middleware', () => {
           endpoint: 'http://localhost:3000/api/test',
           respondedAt: NOW,
           requestedAt: NOW,
+          statusCode: 404,
           json: 'just a message',
         },
         meta: {
