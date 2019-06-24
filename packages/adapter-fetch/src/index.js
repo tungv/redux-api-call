@@ -15,6 +15,7 @@ export default next => async ({ endpoint, ...others }) => {
 
   const meta = {};
   resp.headers.forEach((value, key) => (meta[key] = value));
+  meta.responeCode = resp.status;
 
   if (!resp.ok) {
     const error = new Error('Bad Response');
