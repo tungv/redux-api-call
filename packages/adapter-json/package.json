@@ -1,14 +1,19 @@
 {
   "name": "redux-api-call-adapter-json",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "redux-api-call (npm.im/redux-api-call) adapter to parse JSON response and fallback to raw text\"",
   "main": "build/index.js",
   "repository": "tungv/redux-api-call",
   "author": "Tung Vu <me@tungv.com>",
   "license": "MIT",
   "babel": {
-    "presets": ["stage-3", "env"],
-    "plugins": ["transform-runtime"]
+    "presets": [
+      "stage-3",
+      "env"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
   },
   "scripts": {
     "build": "babel ./src -d ./build",
