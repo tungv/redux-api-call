@@ -313,44 +313,35 @@ describe('reducer', () => {
   describe('ACTION_DISPOSE handler', () => {
     const state = {
       SAMPLE_1: {
-        lastResponse: 'lastResponse of sample 1',
-        lastRequest: 'lastRequest of sample 1',
-        isInvalidated: 'isInvalidated of sample 1',
-        isFetching: 'isFetching of sample 1',
-        error: 'error of sample 1',
         data: {
           key: 'value of sample 1'
         },
       },
       SAMPLE_2: {
-        lastResponse: 'lastResponse of sample 2',
-        lastRequest: 'lastRequest of sample 2',
-        isInvalidated: 'isInvalidated of sample 2',
-        isFetching: 'isFetching of sample 2',
-        error: 'error of sample 2',
         data: {
           key: 'value of sample 2'
         },
       }
     };
 
-    it('should dispose of the data of the apiName', () => {
-      const actual = reducer(state, { type: '@@api/DISPOSE', payload: { name: 'SAMPLE_1' } });
-      const expected = {
-        SAMPLE_1: undefined,
-        SAMPLE_2: {
-          lastResponse: 'lastResponse of sample 2',
-          lastRequest: 'lastRequest of sample 2',
-          isInvalidated: 'isInvalidated of sample 2',
-          isFetching: 'isFetching of sample 2',
-          error: 'error of sample 2',
-          data: {
-            key: 'value of sample 2'
-          },
-        }
-      };
+    const setup = (apiName) => reducer(state, { type: '@@api/DISPOSE', payload: { name: apiName } });
 
-      expect(actual).to.deep.equal(expected);
-    });
+    describe('there is data of the apiName in state', () => {
+      it('should dispose of the data of the apiName', () => {
+        expect(setup('SAMPLE_1')).to.deep.equal({
+          SAMPLE_2: {
+            data: {
+              key: 'value of sample 2'
+            },
+          }
+        });
+      });
+    })
+
+    describe('there is NO data of the apiName in state', () => {
+      it('should return state', () => {
+        expect(setup('SAMPLE_3')).to.deep.equal(state);
+      });
+    })
   });
 });

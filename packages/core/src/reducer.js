@@ -77,7 +77,13 @@ const reducer = handleActions({
       }
     );
   },
-  [ACTION_DISPOSE]: (state, action) => ({ ...state, [getName(action)]: undefined})
+  [ACTION_DISPOSE]: (state, action) => {
+    const apiName = getName(action);
+    if (state.hasOwnProperty(apiName)) {
+      delete state[apiName];
+    }
+    return state;
+  }
 });
 
 export default reducer;
