@@ -309,4 +309,48 @@ describe('reducer', () => {
     });
 
   });
+
+  describe('ACTION_DISPOSE handler', () => {
+    const state = {
+      SAMPLE_1: {
+        lastResponse: 'lastResponse of sample 1',
+        lastRequest: 'lastRequest of sample 1',
+        isInvalidated: 'isInvalidated of sample 1',
+        isFetching: 'isFetching of sample 1',
+        error: 'error of sample 1',
+        data: {
+          key: 'value of sample 1'
+        },
+      },
+      SAMPLE_2: {
+        lastResponse: 'lastResponse of sample 2',
+        lastRequest: 'lastRequest of sample 2',
+        isInvalidated: 'isInvalidated of sample 2',
+        isFetching: 'isFetching of sample 2',
+        error: 'error of sample 2',
+        data: {
+          key: 'value of sample 2'
+        },
+      }
+    };
+
+    it('should dispose of the data of the apiName', () => {
+      const actual = reducer(state, { type: '@@api/DISPOSE', payload: { name: 'SAMPLE_1' } });
+      const expected = {
+        SAMPLE_1: undefined,
+        SAMPLE_2: {
+          lastResponse: 'lastResponse of sample 2',
+          lastRequest: 'lastRequest of sample 2',
+          isInvalidated: 'isInvalidated of sample 2',
+          isFetching: 'isFetching of sample 2',
+          error: 'error of sample 2',
+          data: {
+            key: 'value of sample 2'
+          },
+        }
+      };
+
+      expect(actual).to.deep.equal(expected);
+    });
+  });
 });

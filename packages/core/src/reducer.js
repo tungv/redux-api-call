@@ -4,6 +4,7 @@ import {
   ACTION_FETCH_FAILURE,
   ACTION_UPDATE_LOCAL,
   ACTION_RESET_LOCAL,
+  ACTION_DISPOSE,
 } from './constants';
 import handleActions from './utils/handleActions';
 
@@ -76,6 +77,7 @@ const reducer = handleActions({
       }
     );
   },
+  [ACTION_DISPOSE]: (state, action) => ({ ...state, [getName(action)]: undefined})
 });
 
 export default reducer;
