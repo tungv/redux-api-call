@@ -12,6 +12,7 @@ import {
   ACTION_FETCH_FAILURE,
   ACTION_UPDATE_LOCAL,
   ACTION_RESET_LOCAL
+  ACTION_DISPOSE
 } from './constants';
 import reducer from './reducer'
 
@@ -21,7 +22,8 @@ const ACTIONS = {
   COMPLETE: ACTION_FETCH_COMPLETE,
   FAILURE: ACTION_FETCH_FAILURE,
   UPDATE_LOCAL: ACTION_UPDATE_LOCAL,
-  RESET_LOCAL: ACTION_RESET_LOCAL
+  RESET_LOCAL: ACTION_RESET_LOCAL,
+  DISPOSE: ACTION_DISPOSE
 };
 
 export const defaultTransformers = [dedupe, json, fetch];
