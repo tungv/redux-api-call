@@ -2,6 +2,7 @@ import {
   ACTION_FETCH_START,
   ACTION_RESET_LOCAL,
   ACTION_UPDATE_LOCAL,
+  ACTION_DISPOSE,
   REDUCER_PATH,
 } from './constants';
 import get from './utils/get';
@@ -49,6 +50,11 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     },
   });
 
+  const disposer = () => ({
+    type: ACTION_DISPOSE,
+    payload: { name: apiName }
+  })
+
   const isFetchingSelector = get([REDUCER_PATH, apiName, 'isFetching'], false);
   const isInvalidatedSelector = get([REDUCER_PATH, apiName, 'isInvalidated'], false);
   const dataSelector = get([REDUCER_PATH, apiName, 'data'], null);
@@ -66,5 +72,6 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
     errorSelector,
     lastResponseSelector,
     resetter,
+    disposer
   };
 };
