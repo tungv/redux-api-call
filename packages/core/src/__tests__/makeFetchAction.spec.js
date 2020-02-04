@@ -124,6 +124,16 @@ describe('makeFetchAction', () => {
       });
     });
 
+    describe('disposer', () => {
+      it('should return dispose action of correct apiName', () => {
+        const action = actual.disposer();
+        expect(action).toEqual({
+          type: '@@api/DISPOSE',
+          payload: { name: 'SAMPLE' },
+        });
+      });
+    });
+
     describe('selectors', () => {
       describe('isFetchingSelector', () => {
         it('should return isFetching in state if present', () => {
