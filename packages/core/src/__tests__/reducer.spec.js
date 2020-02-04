@@ -340,7 +340,7 @@ describe('reducer', () => {
 
     describe('there is NO data of the apiName in state', () => {
       it('should return state', () => {
-        expect(setup('SAMPLE_3')).to.deep.equal(state);
+        expect(setup('SAMPLE_3')).to.equal(state);
       });
     })
   });

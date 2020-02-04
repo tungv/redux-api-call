@@ -80,7 +80,8 @@ const reducer = handleActions({
   [ACTION_DISPOSE]: (state, action) => {
     const apiName = getName(action);
     if (state.hasOwnProperty(apiName)) {
-      delete state[apiName];
+      const {[apiName]: disposed, ...newState} = state;
+      return newState;
     }
     return state;
   }
