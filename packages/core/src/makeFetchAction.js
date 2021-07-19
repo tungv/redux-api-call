@@ -56,6 +56,19 @@ export default (apiName, apiConfigFn, selectorDescriptor = {}) => {
   const errorSelector = get([REDUCER_PATH, apiName, 'error'], null);
   const lastResponseSelector = get([REDUCER_PATH, apiName, 'lastResponse'], null);
 
+  const dataSelector = state => {
+    const data = get([REDUCER_PATH, apiName, 'data'], null)(state);
+    if (dataTransform && data) {
+      return dataTransform(data);
+    } else {
+      return data;
+    }
+  };
+
+  const headersSelector = get([REDUCER_PATH, apiName, 'headers'], null);
+  const errorSelector = get([REDUCER_PATH, apiName, 'error'], null);
+  const lastResponseSelector = get([REDUCER_PATH, apiName, 'lastResponse'], null);
+
   return {
     actionCreator,
     updater,

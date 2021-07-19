@@ -239,4 +239,45 @@ describe('makeFetchAction', () => {
       });
     });
   });
+  describe('with custom dataTransform', () => {
+    let actual;
+    let configFn;
+
+    beforeAll(() => {
+      timekeeper.freeze(NOW);
+    });
+
+    beforeAll(() => {
+      configFn = jest.fn(constant({ endpoint: 'http://example.com' }));
+      const dataTransform = data => {
+        return {
+          ...data,
+          transformed: true,
+        };
+      };
+      actual = makeFetchAction('SAMPLE', configFn, dataTransform);
+    });
+
+    describe('dataSelector', () => {
+      it('should return data in state if present', () => {
+        const data = { key: 'value' };
+        expect(
+          actual.dataSelector({
+            api_calls: {
+              SAMPLE: {
+                data,
+              },
+            },
+          }),
+        ).toEqual({
+          key: 'value',
+          transformed: true,
+        });
+      });
+
+      it('should return null if api was not called', () => {
+        expect(actual.dataSelector({})).toBe(null);
+      });
+    });
+  });
 });
