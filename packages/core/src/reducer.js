@@ -74,6 +74,7 @@ const reducer = handleActions({
         lastResponse: resetOrKeepValue('lastResponse', action, currentData),
         data: resetOrKeepValue('data', action, currentData),
         error: resetOrKeepValue('error', action, currentData),
+        headers: resetOrKeepValue('headers', action, currentData),
       }
     );
   },
